@@ -2,20 +2,21 @@
   "name": "ATLAS Training OS",
   "short_name": "ATLAS",
   "description": "Il tuo piano di allenamento Hyrox personalizzato",
-  "start_url": "/index.html",
+  "start_url": "/atlas-training/index.html",
+  "scope": "/atlas-training/",
   "display": "standalone",
   "background_color": "#0a0a0a",
-  "theme_color": "#e8ff47",
+  "theme_color": "#0a0a0a",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "/atlas-training/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "icon-512.png",
+      "src": "/atlas-training/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
