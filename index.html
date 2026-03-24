@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ATLAS — Training OS</title>
+
+<!-- PWA Meta Tags -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ATLAS">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="description" content="Il tuo piano di allenamento Hyrox personalizzato">
+
+<!-- PWA Icons -->
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #1a1a1a;
+    --border: #222222;
+    --accent: #e8ff47;
+    --accent2: #ff6b35;
+    --accent3: #47c4ff;
+    --text: #f0f0f0;
+    --text2: #888888;
+    --text3: #444444;
+    --red: #ff4757;
+    --green: #2ed573;
+    --yellow: #ffa502;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; min-height:100vh; overflow-x:hidden; }
+
+  /* NAV */
+  .nav { position:fixed; bottom:0; left:0; right:0; background:var(--surface); border-top:1px solid var(--border); display:flex; z-index:100; padding-bottom:env(safe-area-inset-bottom); }
+  .nav-btn { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; padding:12px 0 10px; cursor:pointer; color:var(--text3); transition:color .2s; font-size:10px; font-weight:500; letter-spacing:.5px; text-transform:uppercase; }
+  .nav-btn.active { color:var(--accent); }
+  .nav-btn svg { width:22px; height:22px; }
+
+  /* PAGES */
+  .page { display:none; min-height:100vh; padding:0 0 80px; }
+  .page.active { display:block; }
+
+  /* HEADER */
+  .header { padding:50px 20px 20px; }
+  .header-label { font-family:'DM Mono',monospace; font-size:11px; color:var(--text2); letter-spacing:2px; text-transform:uppercase; margin-bottom:6px; }
+  .header-title { font-family:'Bebas Neue',sans-serif; font-size:48px; letter-spacing:2px; line-height:1; }
+  .header-title span { color:var(--accent); }
+  .header-sub { font-size:13px; color:var(--text2); margin-top:8px; }
+
+  /* CARDS */
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px; margin:0 16px 12px; }
+  .card-label { font-family:'DM Mono',monospace; font-size:10px; color:var(--text2); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:10px; }
+  .card-title { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:1px; color:var(--text); }
+  
+  /* TODAY */
+  .today-hero { margin:0 16px 12px; background:var(--accent); border-radius:12px; padding:20px; position:relative; overflow:hidden; }
+  .today-hero::after { content:''; position:absolute; right:-20px; top:-20px; width:120px; height:120px; background:rgba(0,0,0,.08); border-radius:50%; }
+  .today-hero-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; color:#000; opacity:.6; margin-bottom:4px; }
+  .today-hero-day { font-family:'Bebas Neue',sans-serif; font-size:40px; color:#000; line-height:1; }
+  .today-hero-date { font-size:13px; color:#000; opacity:.7; margin-top:4px; }
+
+  .session-block { background:var(--surface2); border-radius:10px; padding:14px; margin-bottom:10px; border-left:3px solid var(--accent); }
+  .session-block.rehab { border-left-color: var(--accent3); }
+  .session-block.recovery { border-left-color: var(--green); }
+  .session-block.run { border-left-color: var(--accent2); }
+  .session-block.crossfit { border-left-color: var(--red); }
+  .session-block.hyrox { border-left-color: var(--accent); }
+  .session-type { font-family:'DM Mono',monospace; font-size:10px; color:var(--text2); letter-spacing:1px; text-transform:uppercase; margin-bottom:4px; }
+  .session-name { font-size:16px; font-weight:600; margin-bottom:8px; }
+  .session-details { font-size:13px; color:var(--text2); line-height:1.6; }
+  .session-tag { display:inline-block; font-size:10px; font-family:'DM Mono',monospace; padding:3px 8px; border-radius:4px; margin-right:6px; margin-top:6px; }
+  .tag-am { background:rgba(232,255,71,.15); color:var(--accent); }
+  .tag-pm { background:rgba(255,107,53,.15); color:var(--accent2); }
+  .tag-any { background:rgba(71,196,255,.15); color:var(--accent3); }
+
+  /* WEEK VIEW */
+  .week-nav { display:flex; align-items:center; justify-content:space-between; padding:16px; }
+  .week-title { font-family:'Bebas Neue',sans-serif; font-size:24px; letter-spacing:1px; }
+  .week-btn { width:36px; height:36px; border-radius:8px; background:var(--surface2); border:1px solid var(--border); color:var(--text); cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .day-pill { display:flex; gap:8px; padding:0 16px; overflow-x:auto; scrollbar-width:none; margin-bottom:16px; }
+  .day-pill::-webkit-scrollbar { display:none; }
+  .day-chip { flex-shrink:0; padding:8px 14px; border-radius:20px; background:var(--surface2); border:1px solid var(--border); cursor:pointer; text-align:center; transition:all .2s; }
+  .day-chip.active { background:var(--accent); border-color:var(--accent); }
+  .day-chip-name { font-size:11px; font-weight:500; color:var(--text2); text-transform:uppercase; letter-spacing:.5px; }
+  .day-chip.active .day-chip-name { color:#000; }
+  .day-chip-num { font-family:'Bebas Neue',sans-serif; font-size:20px; color:var(--text); }
+  .day-chip.active .day-chip-num { color:#000; }
+  .day-chip-dot { width:5px; height:5px; border-radius:50%; background:var(--accent2); margin:3px auto 0; }
+  .day-chip.rest .day-chip-dot { background:var(--text3); }
+
+  /* STATS / LOG */
+  .metrics-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:0 16px; margin-bottom:12px; }
+  .metric-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:14px; }
+  .metric-label { font-family:'DM Mono',monospace; font-size:10px; color:var(--text2); letter-spacing:1px; margin-bottom:6px; }
+  .metric-value { font-family:'Bebas Neue',sans-serif; font-size:32px; letter-spacing:1px; }
+  .metric-unit { font-size:12px; color:var(--text2); margin-left:3px; font-family:'DM Sans',sans-serif; font-weight:400; }
+  .metric-trend { font-size:11px; margin-top:4px; }
+  .trend-up { color:var(--green); }
+  .trend-down { color:var(--red); }
+  .trend-neutral { color:var(--text2); }
+
+  .whoop-bar { height:6px; border-radius:3px; background:var(--surface2); margin-top:8px; overflow:hidden; }
+  .whoop-fill { height:100%; border-radius:3px; transition:width .5s ease; }
+  .fill-green { background:var(--green); }
+  .fill-yellow { background:var(--yellow); }
+  .fill-red { background:var(--red); }
+  .fill-blue { background:var(--accent3); }
+
+  /* LOG FORM */
+  .log-section { padding:0 16px; margin-bottom:16px; }
+  .log-title { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:1px; margin-bottom:12px; color:var(--text2); }
+  .input-row { display:flex; gap:10px; margin-bottom:10px; }
+  .input-group { flex:1; }
+  .input-label { font-family:'DM Mono',monospace; font-size:10px; color:var(--text2); letter-spacing:1px; margin-bottom:5px; }
+  .input-field { width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:15px; outline:none; transition:border-color .2s; }
+  .input-field:focus { border-color:var(--accent); }
+  .save-btn { width:100%; background:var(--accent); color:#000; border:none; border-radius:10px; padding:14px; font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:1px; cursor:pointer; margin-top:6px; transition:opacity .2s; }
+  .save-btn:active { opacity:.8; }
+
+  /* HISTORY CHART */
+  .chart-area { margin:0 16px; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px; margin-bottom:12px; }
+  .chart-title { font-family:'DM Mono',monospace; font-size:11px; color:var(--text2); letter-spacing:1px; margin-bottom:14px; }
+  .chart-canvas { width:100%; height:100px; position:relative; }
+  .chart-line { display:flex; align-items:flex-end; gap:4px; height:80px; }
+  .chart-bar { flex:1; border-radius:3px 3px 0 0; min-height:4px; transition:height .3s ease; cursor:pointer; position:relative; }
+  .chart-bar.weight { background:var(--accent3); }
+  .chart-bar.recovery { background:var(--green); opacity:.8; }
+  .chart-labels { display:flex; gap:4px; margin-top:4px; }
+  .chart-label { flex:1; text-align:center; font-size:9px; color:var(--text3); font-family:'DM Mono',monospace; }
+
+  /* PLAN PAGE */
+  .phase-card { margin:0 16px 12px; border-radius:12px; overflow:hidden; }
+  .phase-header { padding:16px; display:flex; justify-content:space-between; align-items:center; }
+  .phase-1 .phase-header { background:linear-gradient(135deg,#1a2a0a,#2a3a0a); border:1px solid rgba(232,255,71,.3); }
+  .phase-2 .phase-header { background:linear-gradient(135deg,#0a1a2a,#0a2a3a); border:1px solid rgba(71,196,255,.3); }
+  .phase-3 .phase-header { background:linear-gradient(135deg,#2a0a0a,#3a1a0a); border:1px solid rgba(255,107,53,.3); }
+  .phase-name { font-family:'Bebas Neue',sans-serif; font-size:26px; letter-spacing:1px; }
+  .phase-dates { font-family:'DM Mono',monospace; font-size:10px; color:var(--text2); margin-top:2px; }
+  .phase-badge { font-family:'DM Mono',monospace; font-size:11px; padding:6px 12px; border-radius:20px; }
+  .phase-1 .phase-badge { background:rgba(232,255,71,.15); color:var(--accent); }
+  .phase-2 .phase-badge { background:rgba(71,196,255,.15); color:var(--accent3); }
+  .phase-3 .phase-badge { background:rgba(255,107,53,.15); color:var(--accent2); }
+  .phase-body { background:var(--surface); border:1px solid var(--border); border-top:none; padding:14px; border-radius:0 0 12px 12px; }
+  .phase-goal { font-size:13px; color:var(--text2); line-height:1.6; margin-bottom:10px; }
+  .phase-focus { display:flex; flex-wrap:wrap; gap:6px; }
+  .focus-tag { font-size:11px; padding:4px 10px; border-radius:6px; background:var(--surface2); color:var(--text2); border:1px solid var(--border); }
+
+  /* GOALS */
+  .goals-row { display:flex; gap:10px; padding:0 16px; margin-bottom:10px; }
+  .goal-card { flex:1; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:14px; text-align:center; }
+  .goal-icon { font-size:24px; margin-bottom:6px; }
+  .goal-label { font-family:'DM Mono',monospace; font-size:9px; color:var(--text2); letter-spacing:1px; margin-bottom:4px; }
+  .goal-current { font-family:'Bebas Neue',sans-serif; font-size:22px; color:var(--text2); }
+  .goal-arrow { color:var(--accent); font-size:16px; margin:2px 0; }
+  .goal-target { font-family:'Bebas Neue',sans-serif; font-size:22px; color:var(--accent); }
+
+  /* TOAST */
+  .toast { position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-80px); background:var(--accent); color:#000; padding:12px 24px; border-radius:8px; font-weight:600; font-size:14px; z-index:999; transition:transform .3s ease; }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+
+  /* SCROLL */
+  ::-webkit-scrollbar { width:0; }
+
+  .section-divider { height:1px; background:var(--border); margin:16px 16px; }
+
+  .rest-day { margin:0 16px; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:30px; text-align:center; }
+  .rest-day-icon { font-size:40px; margin-bottom:10px; }
+  .rest-day-title { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:1px; margin-bottom:6px; }
+  .rest-day-sub { font-size:13px; color:var(--text2); line-height:1.6; }
+
+  .streak-row { display:flex; gap:6px; padding:0 16px; margin-bottom:16px; }
+  .streak-dot { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:14px; }
+  .streak-done { background:rgba(46,213,115,.2); border:1px solid var(--green); }
+  .streak-today { background:var(--accent); }
+  .streak-future { background:var(--surface2); border:1px solid var(--border); }
+
+  .pill-tabs { display:flex; gap:8px; padding:0 16px; margin-bottom:16px; overflow-x:auto; scrollbar-width:none; }
+  .pill-tab { flex-shrink:0; padding:7px 16px; border-radius:20px; font-size:13px; font-weight:500; cursor:pointer; border:1px solid var(--border); background:var(--surface2); color:var(--text2); transition:all .2s; }
+  .pill-tab.active { background:var(--accent); border-color:var(--accent); color:#000; }
+</style>
+</head>
+<body>
+
+<div id="toast" class="toast">✓ Salvato!</div>
+
+<!-- PAGE: TODAY -->
+<div id="page-today" class="page active">
+  <div class="header">
+    <div class="header-label">ATLAS Training OS</div>
+    <div class="header-title">OGGI <span id="today-day-name">LUN</span></div>
+    <div class="header-sub" id="today-full-date">24 Marzo 2026</div>
+  </div>
+
+  <div class="streak-row" id="streak-row"></div>
+
+  <div id="today-content"></div>
+</div>
+
+<!-- PAGE: WEEK -->
+<div id="page-week" class="page">
+  <div class="header">
+    <div class="header-label">Programmazione</div>
+    <div class="header-title">SETTIMANA <span id="week-num-display">1</span></div>
+  </div>
+  <div class="week-nav">
+    <button class="week-btn" onclick="changeWeek(-1)">&#8592;</button>
+    <div class="week-title" id="week-range-title">31 Mar — 6 Apr</div>
+    <button class="week-btn" onclick="changeWeek(1)">&#8594;</button>
+  </div>
+  <div class="day-pill" id="day-pill"></div>
+  <div id="week-day-content"></div>
+</div>
+
+<!-- PAGE: STATS -->
+<div id="page-stats" class="page">
+  <div class="header">
+    <div class="header-label">Dashboard</div>
+    <div class="header-title">I TUOI <span style="color:var(--accent)">DATI</span></div>
+  </div>
+
+  <div class="goals-row">
+    <div class="goal-card">
+      <div class="goal-icon">🏁</div>
+      <div class="goal-label">HYROX</div>
+      <div class="goal-current" id="g-hyrox-current">75'</div>
+      <div class="goal-arrow">↓</div>
+      <div class="goal-target">SUB 60'</div>
+    </div>
+    <div class="goal-card">
+      <div class="goal-icon">🏃</div>
+      <div class="goal-label">HALF MAR</div>
+      <div class="goal-current" id="g-half-current">1h52'</div>
+      <div class="goal-arrow">↓</div>
+      <div class="goal-target">SUB 1h30'</div>
+    </div>
+  </div>
+
+  <div class="metrics-grid" id="metrics-grid">
+    <div class="metric-card">
+      <div class="metric-label">RECOVERY</div>
+      <div class="metric-value" id="m-recovery" style="color:var(--green)">—<span class="metric-unit">%</span></div>
+      <div class="whoop-bar"><div class="whoop-fill fill-green" id="bar-recovery" style="width:0%"></div></div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">HRV</div>
+      <div class="metric-value" id="m-hrv" style="color:var(--accent3)">—<span class="metric-unit">ms</span></div>
+      <div class="whoop-bar"><div class="whoop-fill fill-blue" id="bar-hrv" style="width:0%"></div></div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">SLEEP SCORE</div>
+      <div class="metric-value" id="m-sleep" style="color:var(--accent)">—<span class="metric-unit">%</span></div>
+      <div class="whoop-bar"><div class="whoop-fill fill-green" id="bar-sleep" style="width:0%"></div></div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">PESO</div>
+      <div class="metric-value" id="m-weight" style="color:var(--text)">—<span class="metric-unit">kg</span></div>
+      <div class="metric-trend" id="t-weight">—</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">MASSA GRASSA</div>
+      <div class="metric-value" id="m-fat" style="color:var(--accent2)">—<span class="metric-unit">%</span></div>
+      <div class="metric-trend" id="t-fat">—</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">MASSA MUSC.</div>
+      <div class="metric-value" id="m-muscle" style="color:var(--green)">—<span class="metric-unit">kg</span></div>
+      <div class="metric-trend" id="t-muscle">—</div>
+    </div>
+  </div>
+
+  <div class="chart-area">
+    <div class="chart-title">RECOVERY SCORE — ULTIMI 7 GIORNI</div>
+    <div class="chart-line" id="chart-recovery"></div>
+    <div class="chart-labels" id="chart-labels"></div>
+  </div>
+
+  <div class="chart-area">
+    <div class="chart-title">PESO — ULTIMI 7 GIORNI</div>
+    <div class="chart-line" id="chart-weight"></div>
+    <div class="chart-labels" id="chart-weight-labels"></div>
+  </div>
+</div>
+
+<!-- PAGE: LOG -->
+<div id="page-log" class="page">
+  <div class="header">
+    <div class="header-label">Daily Check-in</div>
+    <div class="header-title">LOG <span style="color:var(--accent)">OGGI</span></div>
+    <div class="header-sub" id="log-date-sub"></div>
+  </div>
+
+  <div class="log-section">
+    <div class="log-title">WHOOP</div>
+    <div class="input-row">
+      <div class="input-group">
+        <div class="input-label">RECOVERY %</div>
+        <input class="input-field" type="number" id="inp-recovery" placeholder="0-100" min="0" max="100">
+      </div>
+      <div class="input-group">
+        <div class="input-label">HRV (ms)</div>
+        <input class="input-field" type="number" id="inp-hrv" placeholder="es. 65">
+      </div>
+    </div>
+    <div class="input-row">
+      <div class="input-group">
+        <div class="input-label">SLEEP SCORE %</div>
+        <input class="input-field" type="number" id="inp-sleep" placeholder="0-100" min="0" max="100">
+      </div>
+      <div class="input-group">
+        <div class="input-label">ORE SONNO</div>
+        <input class="input-field" type="number" id="inp-sleep-hrs" placeholder="es. 7.5" step="0.5">
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <div class="log-section">
+    <div class="log-title">BILANCIA</div>
+    <div class="input-row">
+      <div class="input-group">
+        <div class="input-label">PESO (kg)</div>
+        <input class="input-field" type="number" id="inp-weight" placeholder="es. 78.5" step="0.1">
+      </div>
+      <div class="input-group">
+        <div class="input-label">MASSA GRASSA %</div>
+        <input class="input-field" type="number" id="inp-fat" placeholder="es. 15.2" step="0.1">
+      </div>
+    </div>
+    <div class="input-row">
+      <div class="input-group">
+        <div class="input-label">MASSA MUSC. (kg)</div>
+        <input class="input-field" type="number" id="inp-muscle" placeholder="es. 38.0" step="0.1">
+      </div>
+      <div class="input-group">
+        <div class="input-label">ACQUA CORP. %</div>
+        <input class="input-field" type="number" id="inp-water" placeholder="es. 58.0" step="0.1">
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <div class="log-section">
+    <div class="log-title">DOLORE GINOCCHIO</div>
+    <div class="input-row">
+      <div class="input-group">
+        <div class="input-label">INTENSITÀ (1-10)</div>
+        <input class="input-field" type="number" id="inp-knee" placeholder="1-10" min="1" max="10">
+      </div>
+      <div class="input-group">
+        <div class="input-label">NOTE</div>
+        <input class="input-field" type="text" id="inp-knee-note" placeholder="es. dopo squat">
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <div class="log-section">
+    <div class="log-title">SESSIONE</div>
+    <div class="input-row">
+      <div class="input-group">
+        <div class="input-label">RPE (1-10)</div>
+        <input class="input-field" type="number" id="inp-rpe" placeholder="percezione fatica" min="1" max="10">
+      </div>
+      <div class="input-group">
+        <div class="input-label">DURATA (min)</div>
+        <input class="input-field" type="number" id="inp-duration" placeholder="es. 60">
+      </div>
+    </div>
+    <div class="input-group" style="padding:0">
+      <div class="input-label" style="padding:0 0 5px">NOTE ALLENAMENTO</div>
+      <input class="input-field" type="text" id="inp-notes" placeholder="Come ti sei sentito...">
+    </div>
+  </div>
+
+  <div class="log-section">
+    <button class="save-btn" onclick="saveLog()">SALVA CHECK-IN</button>
+  </div>
+</div>
+
+<!-- PAGE: PLAN -->
+<div id="page-plan" class="page">
+  <div class="header">
+    <div class="header-label">Macropiano</div>
+    <div class="header-title">IL TUO <span style="color:var(--accent)">PIANO</span></div>
+    <div class="header-sub">20 Aprile → Settembre 2026</div>
+  </div>
+
+  <div class="goals-row">
+    <div class="goal-card">
+      <div class="goal-icon">⚡</div>
+      <div class="goal-label">HYROX TARGET</div>
+      <div class="goal-target" style="font-size:28px">SUB 60'</div>
+    </div>
+    <div class="goal-card">
+      <div class="goal-icon">🎯</div>
+      <div class="goal-label">HALF TARGET</div>
+      <div class="goal-target" style="font-size:28px">SUB 1:30</div>
+    </div>
+  </div>
+
+  <div class="phase-card phase-1">
+    <div class="phase-header">
+      <div>
+        <div class="phase-name">FASE 1 — BASE</div>
+        <div class="phase-dates">20 APR → 25 MAG (6 settimane)</div>
+      </div>
+      <div class="phase-badge">FOUNDATION</div>
+    </div>
+    <div class="phase-body">
+      <div class="phase-goal">Costruire la base aerobica, correggere il pelvic tilt, introdurre i movimenti Hyrox con tecnica corretta. Volume moderato, intensità controllata.</div>
+      <div class="phase-focus">
+        <span class="focus-tag">Corsa Z2 60%</span>
+        <span class="focus-tag">Pelvic tilt rehab</span>
+        <span class="focus-tag">Tecnica Hyrox</span>
+        <span class="focus-tag">Crossfit 2x/sett</span>
+        <span class="focus-tag">Pace Club 1x/sett</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase-card phase-2">
+    <div class="phase-header">
+      <div>
+        <div class="phase-name">FASE 2 — BUILD</div>
+        <div class="phase-dates">26 MAG → 6 LUG (6 settimane)</div>
+      </div>
+      <div class="phase-badge">INTENSITY</div>
+    </div>
+    <div class="phase-body">
+      <div class="phase-goal">Aumentare il volume e l'intensità. Introdurre interval training, soglia lattato, simulazioni Hyrox parziali. Rinforzo muscolare progressivo.</div>
+      <div class="phase-focus">
+        <span class="focus-tag">Interval run</span>
+        <span class="focus-tag">Threshold work</span>
+        <span class="focus-tag">Sled/Rig heavy</span>
+        <span class="focus-tag">Long run 15-18km</span>
+        <span class="focus-tag">Strength +</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase-card phase-3">
+    <div class="phase-header">
+      <div>
+        <div class="phase-name">FASE 3 — PEAK</div>
+        <div class="phase-dates">7 LUG → 14 SET (10 settimane)</div>
+      </div>
+      <div class="phase-badge">RACE READY</div>
+    </div>
+    <div class="phase-body">
+      <div class="phase-goal">Simulazioni gara complete, affinamento della strategia di gara, tapering nelle ultime 2 settimane. Picco della forma fisica.</div>
+      <div class="phase-focus">
+        <span class="focus-tag">Full Hyrox sim</span>
+        <span class="focus-tag">Race pace run</span>
+        <span class="focus-tag">Tapering sett 9-10</span>
+        <span class="focus-tag">Peak condition</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">STRUTTURA SETTIMANALE TIPO</div>
+    <div style="margin-top:4px">
+      <div class="session-block run" style="margin-bottom:8px">
+        <div class="session-type">LUN / GIO</div>
+        <div class="session-name">Corsa mattina + Crossfit sera</div>
+        <div class="session-details">Doppia sessione: corsa Z2/interval al mattino, Crossfit (forza o metcon) alla sera</div>
+        <span class="session-tag tag-am">AM: RUN</span><span class="session-tag tag-pm">PM: CROSSFIT</span>
+      </div>
+      <div class="session-block hyrox" style="margin-bottom:8px">
+        <div class="session-type">MAR</div>
+        <div class="session-name">Pace Club — Classe Hyrox</div>
+        <div class="session-details">Sessione specifica Hyrox con istruttore. Focus su stazioni e transizioni</div>
+        <span class="session-tag tag-pm">PM: HYROX CLASS</span>
+      </div>
+      <div class="session-block crossfit" style="margin-bottom:8px">
+        <div class="session-type">MER</div>
+        <div class="session-name">Crossfit + Rehab Pelvic Tilt</div>
+        <div class="session-details">Crossfit al mattino, esercizi correttivi pelvic tilt + stretching alla sera</div>
+        <span class="session-tag tag-am">AM: CROSSFIT</span><span class="session-tag tag-pm">PM: REHAB</span>
+      </div>
+      <div class="session-block run" style="margin-bottom:8px">
+        <div class="session-type">VEN</div>
+        <div class="session-name">Long Run + Strength</div>
+        <div class="session-details">Uscita lunga progressiva (da 12km a 18km), seguita da strength correttivo</div>
+        <span class="session-tag tag-am">AM: LONG RUN</span>
+      </div>
+      <div class="session-block recovery" style="margin-bottom:8px">
+        <div class="session-type">SAB</div>
+        <div class="session-name">Hyrox Simulation + Mobilità</div>
+        <div class="session-details">Simulazione parziale o completa Hyrox, seguita da foam roller e stretching</div>
+        <span class="session-tag tag-am">AM: HYROX SIM</span>
+      </div>
+      <div class="session-block rehab">
+        <div class="session-type">DOM</div>
+        <div class="session-name">Riposo Attivo</div>
+        <div class="session-details">Camminata, stretching profondo, sauna o cold plunge. Nessun carico.</div>
+        <span class="session-tag tag-any">RECOVERY</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">ROUTINE GIORNALIERA — OGNI GIORNO</div>
+    <div class="session-details" style="line-height:2">
+      🌅 <strong>Mattina:</strong> 10 min — pelvic tilt + hip flexor stretch + glute activation<br>
+      🏋️ <strong>Pre-allenamento:</strong> 10 min warm-up specifico + terminal knee extension<br>
+      ❄️ <strong>Post-allenamento:</strong> Foam roller + theragun (ghiaccio ginocchio se >4/10)<br>
+      🌙 <strong>Sera:</strong> Diclofenac gel ginocchio + stretching 10 min
+    </div>
+  </div>
+</div>
+
+<!-- NAVIGATION -->
+<nav class="nav">
+  <div class="nav-btn active" onclick="showPage('today')" id="nav-today">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    OGGI
+  </div>
+  <div class="nav-btn" onclick="showPage('week')" id="nav-week">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    PIANO
+  </div>
+  <div class="nav-btn" onclick="showPage('stats')" id="nav-stats">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    STATS
+  </div>
+  <div class="nav-btn" onclick="showPage('log')" id="nav-log">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    LOG
+  </div>
+  <div class="nav-btn" onclick="showPage('plan')" id="nav-plan">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    MACRO
+  </div>
+</nav>
+
+<script>
+// =================== DATA ===================
+const PLAN_START = new Date('2026-04-20');
+const RACE_1_DATE = new Date('2026-03-29'); // gara domenica
+const RACE_2_DATE = new Date('2026-04-17'); // Hyrox
+
+const DAYS_IT = ['Dom','Lun','Mar','Mer','Gio','Ven','Sab'];
+const MONTHS_IT = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+
+// Weekly plan template (repeating, adapted by phase)
+// day 0=Mon, 1=Tue, 2=Wed, 3=Thu, 4=Fri, 5=Sat, 6=Sun
+function getWeekPlan(weekNum) {
+  // weekNum 1-based from PLAN_START
+  const isPhase1 = weekNum <= 6;
+  const isPhase2 = weekNum > 6 && weekNum <= 12;
+  const isPhase3 = weekNum > 12;
+
+  const plans = {
+    0: { // Monday
+      sessions: [
+        { type:'run', label:'MATTINA', name:'Corsa Zona 2', tag:'tag-am',
+          details: isPhase1 ? '45-50 min corsa facile Z2 (conversazionale). Obiettivo: costruire base aerobica.' : isPhase2 ? '50-55 min Z2 + 4x3 min soglia con 2 min recupero.' : '55 min con blocchi a ritmo gara half.' },
+        { type:'crossfit', label:'SERA', name:'Crossfit', tag:'tag-pm',
+          details: 'Segui la programmazione del box. Focus su clean tecnica dei movimenti. Segnala il ginocchio al coach.' },
+        { type:'rehab', label:'MATTINA PRE-RUN', name:'Routine Pelvic Tilt (10 min)', tag:'tag-any',
+          details: 'Pelvic tilt supino 3x15 · Hip flexor stretch 60s/lato · Cat-cow 10 rip · Glute bridge 3x15 · Dead bug 3x10/lato' },
+        { type:'recovery', label:'POST-ALLENAMENTO', name:'Recovery Ginocchio', tag:'tag-any',
+          details: 'Foam roller quadricipite + hamstring · Theragun polpaccio · Ghiaccio ginocchio 15 min se dolore >4/10 · Diclofenac gel sera' },
+      ]
+    },
+    1: { // Tuesday
+      sessions: [
+        { type:'hyrox', label:'SERA', name:'Pace Club — Classe Hyrox', tag:'tag-pm',
+          details: 'Sessione specifica Hyrox con istruttore. Focus: tecnica stazioni, transizioni veloci, gestione del respiro.' },
+        { type:'rehab', label:'PRE-CLASSE', name:'Attivazione Gluti + Ginocchio (15 min)', tag:'tag-any',
+          details: 'Clamshell 3x15 · Terminal knee extension con elastico 3x20 · Step-up controllato 2x10/lato · Hip flexor stretch 60s/lato' },
+        { type:'recovery', label:'POST-CLASSE', name:'Recovery', tag:'tag-any',
+          details: 'Stretching ischio-crurali 60s/lato · Foam roller full legs · Ghiaccio ginocchio se necessario' },
+      ]
+    },
+    2: { // Wednesday
+      sessions: [
+        { type:'crossfit', label:'MATTINA', name:'Crossfit', tag:'tag-am',
+          details: 'Segui programmazione box. Se è giorno di squat pesante, scala il peso e mantieni profondità moderata per il ginocchio.' },
+        { type:'rehab', label:'SERA', name:'Sessione Pelvic Tilt Dedicata (40 min)', tag:'tag-pm',
+          details: isPhase1 ? 'FASE 1 — Foam roller ileo-psoas 2min/lato · Hip flexor stretch 60s/lato · Pelvic tilt 3x15 · Dead bug 3x10 · Bird dog 3x10 · Glute bridge 3x15 · Cat-cow 10 rip' : 'FASE 2 — Foam roller 10min · Hip thrust bilanciere 4x10 · RDL monogamba 3x10/lato · Copenhagen plank 3x20s · Pallof press 3x12 · Step-up 3x10/lato' },
+        { type:'recovery', label:'FINE GIORNATA', name:'Recovery Completo', tag:'tag-any',
+          details: 'Sauna 15-20 min (se disponibile) · Stretching profondo 10 min · Diclofenac gel ginocchio' },
+      ]
+    },
+    3: { // Thursday
+      sessions: [
+        { type:'run', label:'MATTINA', name: isPhase1 ? 'Corsa Easy + Strides' : isPhase2 ? 'Interval Training' : 'Tempo Run', tag:'tag-am',
+          details: isPhase1 ? '40 min easy + 4x100m strides a fine corsa. Mantieni postura corretta, pensa al bacino neutro.' : isPhase2 ? '10 min warm-up + 5x1000m a ritmo 5K + 10 min cool-down. Recupero 90s tra le ripetute.' : '10 min warm-up + 25 min a ritmo gara half + 10 min cool-down.' },
+        { type:'crossfit', label:'SERA', name:'Crossfit', tag:'tag-pm',
+          details: 'Seconda sessione crossfit settimanale. Se la fatica è alta (recovery Whoop <50%), scala intensità o salta.' },
+        { type:'rehab', label:'PRE-RUN', name:'Routine Ginocchio + Attivazione (10 min)', tag:'tag-any',
+          details: 'Terminal knee extension 3x20 · Clamshell 2x15 · Hip flexor stretch 45s/lato · Glute activation walk con elastico' },
+        { type:'recovery', label:'POST-TUTTO', name:'Recovery Serale', tag:'tag-any',
+          details: 'Foam roller completo · Theragun quadricipite + polpaccio · Cold plunge o ghiaccio ginocchio · Stretching 10 min' },
+      ]
+    },
+    4: { // Friday
+      sessions: [
+        { type:'run', label:'MATTINA', name: isPhase1 ? 'Long Run (12 km)' : isPhase2 ? 'Long Run (15 km)' : 'Long Run (18 km)', tag:'tag-am',
+          details: isPhase1 ? '12 km a passo facile Z2. Non andare sopra 75% FC max. Questo è il giorno chiave per la half marathon.' : isPhase2 ? '15 km con ultimi 3 km a ritmo target half. Porta con te l\'hydration.' : '18 km con km 12-17 a ritmo gara. Testa la strategia di nutrizione.' },
+        { type:'rehab', label:'POST-RUN', name:'Strength Correttivo (25 min)', tag:'tag-any',
+          details: 'Hip thrust 3x10 · Romanian DL 3x10 · Step-up 3x10/lato · Pallof press 3x12 · Stretching hip flexor + hamstring' },
+        { type:'recovery', label:'SERA', name:'Recovery Attivo', tag:'tag-any',
+          details: 'Foam roller full body · Diclofenac gel · Stretching completo 15 min · Prepara gear per sabato' },
+      ]
+    },
+    5: { // Saturday
+      sessions: [
+        { type:'hyrox', label:'MATTINA', name: isPhase1 ? 'Simulazione Hyrox Parziale (3-4 stazioni)' : isPhase2 ? 'Simulazione Hyrox 6 stazioni' : 'Full Hyrox Simulation', tag:'tag-am',
+          details: isPhase1 ? '1km corsa + Ski erg 1000m + 1km + Sled push + 1km + Wall balls. Focus sulla transizione corsa-stazione.' : isPhase2 ? '6 stazioni + corsa intermedia a ritmo gara. Cronometra ogni sezione.' : 'Simulazione completa 8 stazioni. Obiettivo: gestire il ritmo per finire in meno di 65 min (poi progressivo).' },
+        { type:'recovery', label:'POST-SIMULAZIONE', name:'Mobilità & Recovery (30 min)', tag:'tag-any',
+          details: 'Foam roller full body 15 min · Stretching profondo: hip flexor, hamstring, quadricipite, polpaccio · Theragun · Ghiaccio ginocchio' },
+      ]
+    },
+    6: { // Sunday
+      isRest: true,
+      sessions: [
+        { type:'recovery', label:'TUTTO IL GIORNO', name:'Riposo Attivo', tag:'tag-any',
+          details: 'Camminata 30-45 min · Stretching completo 20 min · Sauna o cold plunge · Nutrizionalmente: giorno di ricarica se hai fame.' },
+        { type:'rehab', label:'MATTINA', name:'Routine Base Pelvic Tilt (10 min)', tag:'tag-any',
+          details: 'Non saltare mai questo! Pelvic tilt 15 rip · Hip flexor stretch 60s/lato · Cat-cow 10 rip · Glute bridge 15 rip · Dead bug 10 rip/lato' },
+      ]
+    }
+  };
+  return plans;
+}
+
+// =================== STATE ===================
+let currentPage = 'today';
+let currentWeek = 1;
+let selectedWeekDay = 0; // Monday
+let logData = JSON.parse(localStorage.getItem('atlas-logs') || '{}');
+
+// =================== HELPERS ===================
+function todayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+}
+
+function dateKey(d) {
+  return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+}
+
+function formatDate(d) {
+  return `${d.getDate()} ${MONTHS_IT[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+function getDayOfWeek(d) {
+  // 0=Sun,1=Mon...6=Sat → convert to Mon=0
+  return (d.getDay() + 6) % 7;
+}
+
+function getWeekNumber(d) {
+  const diff = d - PLAN_START;
+  if (diff < 0) return 0;
+  return Math.floor(diff / (7 * 24 * 3600 * 1000)) + 1;
+}
+
+function isInPlanPeriod(d) {
+  return d >= PLAN_START;
+}
+
+// =================== NAV ===================
+function showPage(p) {
+  document.querySelectorAll('.page').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(x => x.classList.remove('active'));
+  document.getElementById('page-' + p).classList.add('active');
+  document.getElementById('nav-' + p).classList.add('active');
+  currentPage = p;
+  if (p === 'stats') renderStats();
+  if (p === 'week') renderWeek();
+  if (p === 'log') renderLog();
+}
+
+// =================== TODAY PAGE ===================
+function renderToday() {
+  const today = new Date();
+  const dow = getDayOfWeek(today);
+  const dayNames = ['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato','Domenica'];
+  const dayNamesShort = ['LUN','MAR','MER','GIO','VEN','SAB','DOM'];
+
+  document.getElementById('today-day-name').textContent = dayNamesShort[dow];
+  document.getElementById('today-full-date').textContent = formatDate(today);
+  document.getElementById('log-date-sub').textContent = formatDate(today);
+
+  // Streak
+  renderStreak();
+
+  const container = document.getElementById('today-content');
+  container.innerHTML = '';
+
+  // Pre-plan period
+  if (!isInPlanPeriod(today)) {
+    const daysLeft = Math.ceil((PLAN_START - today) / (24*3600*1000));
+    container.innerHTML = `
+      <div style="margin:0 16px 12px">
+        <div class="today-hero">
+          <div class="today-hero-label">COUNTDOWN AL PIANO</div>
+          <div class="today-hero-day">${daysLeft} GIORNI</div>
+          <div class="today-hero-date">Il piano inizia il 20 Aprile 2026</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label">COSA FARE ORA</div>
+        <div class="session-details" style="line-height:2">
+          ${today <= RACE_1_DATE ? '🏁 <strong>Domenica 29 marzo</strong> — Prima gara Hyrox<br>' : ''}
+          ${today <= RACE_2_DATE ? '⚡ <strong>17 aprile</strong> — Seconda gara Hyrox<br>' : ''}
+          🦵 <strong>Recupero ginocchio</strong> — Ghiaccio, Diclofenac, TKE<br>
+          🧘 <strong>Fase 1 Pelvic Tilt</strong> — 10 min mattina, ogni giorno<br>
+          💤 <strong>Priorità al sonno</strong> — Logga tutto su Whoop
+        </div>
+      </div>`;
+    return;
+  }
+
+  const weekNum = getWeekNumber(today);
+  const plan = getWeekPlan(weekNum);
+  const dayPlan = plan[dow];
+
+  container.innerHTML = `
+    <div style="margin:0 16px 12px">
+      <div class="today-hero">
+        <div class="today-hero-label">SETTIMANA ${weekNum} · ${dow === 6 ? 'RIPOSO' : 'ALLENAMENTO'}</div>
+        <div class="today-hero-day">${dayNames[dow].toUpperCase()}</div>
+        <div class="today-hero-date">${formatDate(today)}</div>
+      </div>
+    </div>`;
+
+  if (dayPlan.isRest) {
+    container.innerHTML += `
+      <div class="rest-day">
+        <div class="rest-day-icon">😴</div>
+        <div class="rest-day-title">RIPOSO ATTIVO</div>
+        <div class="rest-day-sub">Nessun allenamento strutturato oggi. Il recupero è parte del piano, non un'eccezione.</div>
+      </div>`;
+  }
+
+  dayPlan.sessions.forEach(s => {
+    container.innerHTML += `
+      <div class="session-block ${s.type}" style="margin:0 16px 10px">
+        <div class="session-type">${s.label}</div>
+        <div class="session-name">${s.name}</div>
+        <div class="session-details">${s.details}</div>
+        <span class="session-tag ${s.tag}">${s.tag === 'tag-am' ? '🌅 MATTINA' : s.tag === 'tag-pm' ? '🌙 SERA' : '⚡ FLESSIBILE'}</span>
+      </div>`;
+  });
+
+  // Today's log preview
+  const log = logData[dateKey(today)];
+  if (log) {
+    container.innerHTML += `
+      <div class="card" style="border-color:rgba(232,255,71,.3)">
+        <div class="card-label">CHECK-IN DI OGGI ✓</div>
+        <div class="session-details" style="line-height:2">
+          ${log.recovery ? `🟢 Recovery: <strong>${log.recovery}%</strong>` : ''} ${log.hrv ? `· HRV: <strong>${log.hrv}ms</strong>` : ''}<br>
+          ${log.weight ? `⚖️ Peso: <strong>${log.weight}kg</strong>` : ''}${log.fat ? ` · Grasso: <strong>${log.fat}%</strong>` : ''}<br>
+          ${log.knee ? `🦵 Ginocchio: <strong>${log.knee}/10</strong>` : ''}
+        </div>
+      </div>`;
+  } else {
+    container.innerHTML += `
+      <div class="card" style="cursor:pointer;border-style:dashed" onclick="showPage('log')">
+        <div class="card-label">CHECK-IN MANCANTE</div>
+        <div class="session-details">Tocca per loggare Whoop, peso e ginocchio di oggi →</div>
+      </div>`;
+  }
+}
+
+// =================== STREAK ===================
+function renderStreak() {
+  const row = document.getElementById('streak-row');
+  row.innerHTML = '';
+  const today = new Date();
+  for (let i = -3; i <= 3; i++) {
+    const d = new Date(today);
+    d.setDate(d.getDate() + i);
+    const key = dateKey(d);
+    const hasLog = !!logData[key];
+    const isToday = i === 0;
+    const isFuture = i > 0;
+    let cls = isFuture ? 'streak-future' : hasLog ? 'streak-done' : 'streak-future';
+    if (isToday) cls = 'streak-today';
+    const label = isFuture ? '·' : hasLog ? '✓' : isToday ? '●' : '○';
+    row.innerHTML += `<div class="streak-dot ${cls}" style="color:${isToday?'#000':'inherit'}">${label}</div>`;
+  }
+}
+
+// =================== WEEK PAGE ===================
+function renderWeek() {
+  const weekOffset = currentWeek - 1;
+  const weekStart = new Date(PLAN_START);
+  weekStart.setDate(weekStart.getDate() + weekOffset * 7);
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekEnd.getDate() + 6);
+
+  document.getElementById('week-num-display').textContent = currentWeek;
+  document.getElementById('week-range-title').textContent =
+    `${weekStart.getDate()} ${MONTHS_IT[weekStart.getMonth()].slice(0,3)} — ${weekEnd.getDate()} ${MONTHS_IT[weekEnd.getMonth()].slice(0,3)}`;
+
+  const pill = document.getElementById('day-pill');
+  pill.innerHTML = '';
+  const dayNames = ['Lun','Mar','Mer','Gio','Ven','Sab','Dom'];
+
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(weekStart);
+    d.setDate(d.getDate() + i);
+    const isRest = i === 6;
+    const isActive = i === selectedWeekDay;
+    const hasLog = !!logData[dateKey(d)];
+    pill.innerHTML += `
+      <div class="day-chip ${isRest?'rest':''} ${isActive?'active':''}" onclick="selectWeekDay(${i})">
+        <div class="day-chip-name">${dayNames[i]}</div>
+        <div class="day-chip-num">${d.getDate()}</div>
+        <div class="day-chip-dot" style="background:${hasLog?'var(--green)':isRest?'var(--text3)':'var(--accent2)'}"></div>
+      </div>`;
+  }
+
+  renderWeekDayContent();
+}
+
+function selectWeekDay(i) {
+  selectedWeekDay = i;
+  renderWeek();
+}
+
+function changeWeek(delta) {
+  currentWeek = Math.max(1, Math.min(24, currentWeek + delta));
+  renderWeek();
+}
+
+function renderWeekDayContent() {
+  const container = document.getElementById('week-day-content');
+  container.innerHTML = '';
+  const plan = getWeekPlan(currentWeek);
+  const dayPlan = plan[selectedWeekDay];
+  const dayNames = ['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato','Domenica'];
+
+  if (dayPlan.isRest) {
+    container.innerHTML = `
+      <div class="rest-day">
+        <div class="rest-day-icon">😴</div>
+        <div class="rest-day-title">${dayNames[selectedWeekDay].toUpperCase()}</div>
+        <div class="rest-day-sub">Riposo attivo. Camminata, stretching e recupero.</div>
+      </div>`;
+  }
+
+  dayPlan.sessions.forEach(s => {
+    container.innerHTML += `
+      <div class="session-block ${s.type}" style="margin:0 16px 10px">
+        <div class="session-type">${s.label}</div>
+        <div class="session-name">${s.name}</div>
+        <div class="session-details">${s.details}</div>
+        <span class="session-tag ${s.tag}">${s.tag==='tag-am'?'🌅 MATTINA':s.tag==='tag-pm'?'🌙 SERA':'⚡ FLESSIBILE'}</span>
+      </div>`;
+  });
+}
+
+// =================== STATS PAGE ===================
+function renderStats() {
+  const today = new Date();
+  const key = dateKey(today);
+  const log = logData[key] || {};
+
+  const set = (id, val, unit='') => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = val ? `${val}<span class="metric-unit">${unit}</span>` : `—<span class="metric-unit">${unit}</span>`;
+  };
+
+  set('m-recovery', log.recovery, '%');
+  set('m-hrv', log.hrv, 'ms');
+  set('m-sleep', log.sleep, '%');
+  set('m-weight', log.weight, 'kg');
+  set('m-fat', log.fat, '%');
+  set('m-muscle', log.muscle, 'kg');
+
+  if (log.recovery) document.getElementById('bar-recovery').style.width = log.recovery + '%';
+  if (log.hrv) document.getElementById('bar-hrv').style.width = Math.min(100, log.hrv) + '%';
+  if (log.sleep) document.getElementById('bar-sleep').style.width = log.sleep + '%';
+
+  // Charts
+  renderChart('chart-recovery', 'chart-labels', 'recovery', 100, 'fill-green');
+  renderChart('chart-weight', 'chart-weight-labels', 'weight', null, 'fill-blue');
+
+  // Trends
+  renderTrend('t-weight', 'weight');
+  renderTrend('t-fat', 'fat', true);
+  renderTrend('t-muscle', 'muscle');
+}
+
+function getLast7(field) {
+  const result = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const key = dateKey(d);
+    result.push({ day: DAYS_IT[d.getDay()].slice(0,1), val: logData[key] ? parseFloat(logData[key][field]) || 0 : 0 });
+  }
+  return result;
+}
+
+function renderChart(chartId, labelsId, field, maxVal, fillClass) {
+  const data = getLast7(field);
+  const vals = data.map(d => d.val).filter(v => v > 0);
+  const max = maxVal || (vals.length ? Math.max(...vals) * 1.05 : 100);
+  const min = vals.length ? Math.min(...vals) * 0.97 : 0;
+
+  const chart = document.getElementById(chartId);
+  const labels = document.getElementById(labelsId);
+  if (!chart) return;
+
+  chart.innerHTML = '';
+  labels.innerHTML = '';
+
+  data.forEach(d => {
+    const pct = max > 0 && d.val > 0 ? ((d.val - min) / (max - min)) * 80 + 4 : 4;
+    chart.innerHTML += `<div class="chart-bar ${field}" style="height:${pct}px;background:${fillClass==='fill-green'?'var(--green)':fillClass==='fill-blue'?'var(--accent3)':'var(--accent)'};opacity:${d.val>0?1:0.2}" title="${d.val}"></div>`;
+    labels.innerHTML += `<div class="chart-label">${d.day}</div>`;
+  });
+}
+
+function renderTrend(elId, field, lowerIsBetter = false) {
+  const data = getLast7(field);
+  const vals = data.map(d => d.val).filter(v => v > 0);
+  const el = document.getElementById(elId);
+  if (!el || vals.length < 2) return;
+  const diff = (vals[vals.length-1] - vals[vals.length-2]).toFixed(1);
+  const isGood = lowerIsBetter ? diff < 0 : diff > 0;
+  const arrow = diff > 0 ? '↑' : diff < 0 ? '↓' : '→';
+  el.innerHTML = `<span class="${isGood?'trend-up':diff==0?'trend-neutral':'trend-down'}">${arrow} ${Math.abs(diff)} vs ieri</span>`;
+}
+
+// =================== LOG PAGE ===================
+function renderLog() {
+  const today = new Date();
+  document.getElementById('log-date-sub').textContent = formatDate(today);
+  const log = logData[dateKey(today)] || {};
+  const fields = ['recovery','hrv','sleep','sleep-hrs','weight','fat','muscle','water','knee','knee-note','rpe','duration','notes'];
+  fields.forEach(f => {
+    const el = document.getElementById('inp-' + f);
+    if (el && log[f.replace('-','')]) el.value = log[f.replace('-','')];
+  });
+}
+
+function saveLog() {
+  const today = new Date();
+  const key = dateKey(today);
+  const get = id => document.getElementById('inp-' + id)?.value || '';
+
+  logData[key] = {
+    recovery: get('recovery'),
+    hrv: get('hrv'),
+    sleep: get('sleep'),
+    sleephrs: get('sleep-hrs'),
+    weight: get('weight'),
+    fat: get('fat'),
+    muscle: get('muscle'),
+    water: get('water'),
+    knee: get('knee'),
+    kneeNote: get('knee-note'),
+    rpe: get('rpe'),
+    duration: get('duration'),
+    notes: get('notes'),
+    ts: new Date().toISOString()
+  };
+
+  localStorage.setItem('atlas-logs', JSON.stringify(logData));
+  showToast('✓ Check-in salvato!');
+  renderStreak();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// =================== INIT ===================
+function init() {
+  const today = new Date();
+  const weekNum = Math.max(1, getWeekNumber(today));
+  currentWeek = weekNum || 1;
+  selectedWeekDay = getDayOfWeek(today);
+  renderToday();
+}
+
+init();
+
+// =================== SERVICE WORKER ===================
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then(() => console.log('ATLAS SW registered'))
+      .catch(e => console.log('SW error:', e));
+  });
+}
+
+// =================== iOS INSTALL HINT ===================
+function showIOSInstallHint() {
+  const isIOS = /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
+  const isStandalone = window.navigator.standalone;
+  const shown = localStorage.getItem('atlas-install-hint');
+  if (isIOS && !isStandalone && !shown) {
+    localStorage.setItem('atlas-install-hint', '1');
+    setTimeout(() => {
+      const hint = document.createElement('div');
+      hint.style.cssText = `
+        position:fixed;bottom:90px;left:16px;right:16px;
+        background:#1a1a1a;border:1px solid #e8ff47;border-radius:12px;
+        padding:14px 16px;z-index:200;font-size:13px;color:#f0f0f0;
+        display:flex;align-items:center;gap:12px;
+        box-shadow:0 8px 32px rgba(0,0,0,.6);
+      `;
+      hint.innerHTML = `
+        <span style="font-size:22px">📲</span>
+        <div>
+          <div style="font-weight:600;margin-bottom:3px">Installa ATLAS</div>
+          <div style="color:#888;font-size:12px">Tocca <strong style="color:#e8ff47">Condividi</strong> poi <strong style="color:#e8ff47">Aggiungi a Home</strong></div>
+        </div>
+        <span onclick="this.parentElement.remove()" style="margin-left:auto;color:#888;font-size:20px;cursor:pointer">×</span>
+      `;
+      document.body.appendChild(hint);
+      setTimeout(() => hint.remove(), 8000);
+    }, 2000);
+  }
+}
+showIOSInstallHint();
+</script>
+</body>
+</html>
