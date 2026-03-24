@@ -1,8 +1,10 @@
-const CACHE = 'atlas-v1';
+const CACHE = 'atlas-v2';
+const BASE = '/atlas-training';
 const ASSETS = [
-  '/index.html',
-  '/manifest.json',
-  'https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap'
+  BASE + '/index.html',
+  BASE + '/manifest.json',
+  BASE + '/icon-192.png',
+  BASE + '/icon-512.png'
 ];
 
 self.addEventListener('install', e => {
