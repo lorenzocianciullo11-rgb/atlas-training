@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ATLAS — Training OS</title>
+
+<!-- PWA Meta Tags -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ATLAS">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="description" content="Il tuo piano di allenamento Hyrox personalizzato">
+
+<!-- PWA Icons -->
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAIAAADdvvtQAAAMN0lEQVR4nO2d7VNTVx7HTx4hATHBQECKRUtiRBDtaNVqq2JXl64iYIvSdjqz7/fFznRn9vXO/ge1uzu7sy92Z+1Ma33oqkG2tQ+LdVtdsdsgICAoQtXw/BRIgCT74qYR5UE4vxuSc+/388K5Ifeee2M+nHPuOd970JjNZgYAL9p4XwAQGwgESEAgQAICARIQCJCAQIAEBAIkIBAgAYEACQgESEAgQAICARIQCJCAQICEfkl7d/heidF1gIRiXcqVRe6JGgiQgECABAQCJCAQIAGBAAkIBEhAIEACAgESEAiQgECABAQCJDR4tBlQQA0ESEAgQAICARIQCJCAQIAEBAIkIBAgAYEACQgESEAgQAICARIQCJCAQIAEBAIkIBAgAYEACQgESEAgQAICARIQCJCAQIAEBAIkIBAgAYEACQgESEAgQAICARIQCJCAQIAEBAIkIBAgAYEACQgESEAgQAICARIQCJCAQIAEBAIkIBAgAYEACQgESEAgQAICARIQCJCAQIAEBAIkIBAgAYEACQgESEAgQAICARIQCJCAQIAEBAIkIBAgAYEACQgESOjjfQFxo7TC9oeTG+jl/P1PD373m3Z6OYKi3hqo8i27LOWUVWXoDRpZihIRlQpkXWXY8zOrXEXtO5guS1EiolKBjhyTs9qofCtTrqKEQ6UCydV+SZSUrrJYVdqbVKNADpe5cEuqjAUajJpDb2bIWKBAqFGgynfkrH4iZcpapQmE6gTSatmRY/J3WTZvW7HOYZK92MRHdQK9vNeatdoYi5Ir31ZjJaQ6gY6+E6s7pvLjmRr1jQepSyBzqu7AYVuMCl+dm7TjFUuMCk9Y1CXQ6+U2kzmGH7kyZtVbwqIugSreju0XXHoktoImICr6tMvQxJhTdQfLYtVEJiYqEqiiejk6uZUxruQSDTUJtCxjfbEbJkhM1CLQsg30abWs/LiKKiG1CLScUw0VahpRVIVA3JOd9d+OcBzlcJmLXpRzsjaRUYVA3HGL3/+249GPAY4D1TO3qgqB+AJf9zv8nvrRmrN9HMeqJ+eqfIG4I6cXz/RG/+U46d4Dqsi5Kl8g7srgwie9jLH//Xe0u9PPcfhRdQwIKV8gvu7InZbxlkaftF1zjqcVU0nOVeECveDkvCFyn37ccl08zdOKGYyaX7yh/JyrwgXiTv9I7ZfEre/HOtsneM6uggEhJQvEPSjc3ODraHvCGDfXvdjmbSvWKj3nqmSBdu6xZOUkcRw4u83ia8WYCgaElCwQd0jZPevW/fYtX3vrOEdRis+5KlYgc4ruYNkqjgM99aP3785x3+4+w9OK5axReM5VsQKVltvMKTqOAy+enlsUN28rFusYZHxRrEB8wa5wmLnPzi1K2+3x1iYfR5mlMQ5ixxdlfrCsnKTtXA3Hze9GHnbPO3s6X+W0MCmKzrkqU6CK6kwt1ydbeOaLb16MKTrnqlCBuKbfQyG28Nz7vTsTTR6eVkzBOVcFClS8dUX+ejPHgde+Ger1Ti68D9+AUIweyE8EFCgQ93JP7kV0cWYPES2SWCwJkggoTSC9gTO9GpwOX/r02QJ13fN76kc5ypd9UaIEQWkClfw83Zpu4Djw6tdDg/1Ti9mTb0SRKXRaQ2kCcU9fLL5z4z7bGw7znEKROVdFCWSx6vnSq1OT4c/O9y9y5wddge+v8zytkW5TYM5VUQIdrso0GHl+xesuD44MTy9+f0IrprR7MUUJxP31LPXmvOZsbyjEc6KS0vSVFkXlXJUj0DqHqXjrCo4DA/7Q5+7Ftl8S3oeT9d8Oc5zLmKRV2HquyhHoKO9Ay1e1A+NjwaUedRH3YowxxQik0fAP9fLNcF061xcM8tyMbXlJUTlXhQi041XL6lye9Oq4L/jlpQGOA/t6Jq9/w9OKMWVVQgoRiHu6+wv3gH+Cqz9MCEorKeeqBIHMKbrSI5yBG+6EBmOs9p/9wWmeVixnTdL23Su5z5tQKOGW8mDZKnMqT3qVMfbnjwvkvZhFUvm2/bsrnC1gQqGEGkjEJeJLKxSScxX+M2StNu7cY4n3VSyZlFgueb6cCC9QebWdL70ad5SRcxXz/34GfOnVRGDXPqs9W/icq9gCFb2Y6nDxpFcTAWWs5yq2QKKPyInY/X8KgQXSGzRlVWJPTDo2mAs3i51zFVigfQfTrat40qsJheiVkMACKSOcVVaVodMLPK8hqkAWq76klGfxjUQj3WbYe8Aa76vgR1SBDr2ZwZdeTUCEXglPVIFEv/+aidA5VyEFWuswbd7Gk15NTIxJ2kPCrucqpPjc1c/UZPiltd8NDy3hAYwl8WFNEd/EXMVbmR/+9aHcl7MciFcDaTT8A7h1lwdjZw97cnHgJfHi9rS8fCFzruIJtOMVS84anvQqY+z8Jz3yXsxT1H7aNz3F9dSqsKMS4gnEveTgxHjoCzdP/HnxDA1Of/PlIN+xFdV2EXOugglkMmtLyzljNJfd/eO+JT++s1S4WzFBc66CCXTgsC2FN73K/dUuic8u9Af8nCl9Eac1BBOI+29fjAxP//vz2LZfEr6x4Nf/4jxRaYUt2STYN6Ixm4XJ09izjVdbt8+ZPwwGtR+f2DUZiIxK5Ll69h5plLY//mDXhO8Zua3BwcETJ07k5eW9++670k9OnTp1+/btBQ7R6XTvvfdecnKy9LKpqen06dPS9uuVtg/+sSG6Z0eTvc2TPdCTOhXQ6wxBY9J0alpg5apx15budPvYU8X++pct50/FtqcvLyL5Xn583rVXu9psUXtmv4wF69evj9rz1MsvLz1+VvrqJVfdhYKHndbAhCEU0kwF9L6RZG/3ytYfsvsezTEWyl3FxguRBhIXSK+238qa+TIY1N5rznRufsAYO/arq309kzvzrweDYZfLVVVVJe1z8uTJjo4O7ovZtGnTzJc6na6goODmzZuMMf9E6HJNf1lV5sNOa5snmzFmSJp+9VBzVu4Q04THhpMHvCvu3s7U6ee44Zdyrt6Hz1jrM3EQpgYq3JLqLEiZ8y3/uOHHu5GFm9KskT/T1N74WCn3Gc7n2OfDbDbn5+dL2wMDkR7PTKWkDnt3RyQvkLN2IDe/z5A0bTAGrRm+FwofvfaG54WNj2aXLNx6rsIItMD0xd1meyikYYwZk6a3v9Yq/dDbvXJ0KDK2K/v9V2FhoVarZYwFAoHa2lrph2vWrLFaI8EMach76qdmtKd75YB3sclD7mVG4oIYAun0C6VX7/zUfuU6+lavHTSlROr/9kY7Y6y708+3It0CFBcXSxstLS3t7e0+X2T18WglJK2Zt8ISqQ7Hx5LO/23b2b/s+E+tq/1W1sTYQp16sXKuYgi094A13TZ3enW439z/U290ratHowk/74zUN1LH6OKZPr41MefDZrNlZ2dL242NjeFwuLm5WXo5sxU7f6pnXYFXb3g8dDkyaGr9IfuKe8OpP75cd6Fg0j9vB1SgZ5XE6ER/UTOwLuXKnG/t379/1y7GGPP7/fu2XAgGg3l5XdLd+OiQaY/rXldXl7wXE61+/H6/1A1vamraunUrY8xqtebm5kpnvPrVUFH2505n5+HDh1NSnui9hcOajiZ77afDH330kbzXtvyIUQPNh0ajKSoqkrZbWlqCwSBjrLOzc3abEq8ztra2vv/+++fOnfN4PGNjT4z6OJ1Oi8Ui7+UtP2LUQPORl5eXlpYmbRcXF0frhigbN26sra2VvuZ4nXFqaqqhoaGhoYExZrfbS0pKHA6H9JbVah0aGpLr2uKC2DXQMyuY5ORkp9OZOGf0er11dXXRl37/HH9bUywEroEMBsOGDZEZg5qamhs3bsx8t7q6WvpF37RpU7STu8xn3L1793PPPdfW1vbgwYPR0dGJiYm0tLSdO3dK+/t8Pq/XK8uFxRGBBXK5XEZj5H74zp07T73b1tYmfZ0Oh8NsNo+PL+1vLkcHrKPU19ffv39/SWc0GAxOp3POCikcDrvd7hDfatOJhMACRVuT3t7e2T2J6Bes1WoLCwuvX7++/Gf0eDyBQCAnJycjI8NkMplMplAoNDIy0tXVde3atUeP5hiJFg6RZuNBAiJ2JxrEHQgESEAgQAICARIQCJCAQIAEBAIkIBAgAYEACQgESEAgQAICARIQCJCAQIAEBAIkIBAgAYEACQgESEAgQAICARIQCJCAQIDE/wE+YJFXu5MbLQAAAABJRU5ErkJggg==">
+<link rel="icon" type="image/png" sizes="192x192" href="data:image/png;base64,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">
+<script>
+(function() {
+  const manifest = {
+    "name": "ATLAS Training OS",
+    "short_name": "ATLAS",
+    "start_url": "https://lorenzocianciullo11-rgb.github.io/atlas-training/index.html",
+    "scope": "https://lorenzocianciullo11-rgb.github.io/atlas-training/",
+    "display": "standalone",
+    "background_color": "#0a0a0a",
+    "theme_color": "#0a0a0a",
+    "orientation": "portrait",
+    "icons": [
+      {"src": "data:image/png;base64,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", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+      {"src": "data:image/png;base64,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", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+    ]
+  };
+  const blob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
+  const link = document.createElement('link');
+  link.rel = 'manifest';
+  link.href = URL.createObjectURL(blob);
+  document.currentScript.after(link);
+})();
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #1a1a1a;
+    --border: #222222;
+    --accent: #e8ff47;
+    --accent2: #ff6b35;
+    --accent3: #47c4ff;
+    --text: #f0f0f0;
+    --text2: #888888;
+    --text3: #444444;
+    --red: #ff4757;
+    --green: #2ed573;
+    --yellow: #ffa502;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; min-height:100vh; overflow-x:hidden; }
+
+  /* NAV */
+  .nav { position:fixed; bottom:0; left:0; right:0; background:var(--surface); border-top:1px solid var(--border); display:flex; z-index:100; padding-bottom:env(safe-area-inset-bottom); }
+  .nav-btn { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; padding:12px 0 10px; cursor:pointer; color:var(--text3); transition:color .2s; font-size:10px; font-weight:500; letter-spacing:.5px; text-transform:uppercase; }
+  .nav-btn.active { color:var(--accent); }
+  .nav-btn svg { width:22px; height:22px; }
+
+  /* PAGES */
+  .page { display:none; min-height:100vh; padding:0 0 80px; }
+  .page.active { display:block; }
+
+  /* HEADER */
+  .header { padding:50px 20px 20px; }
+  .header-label { font-family:'DM Mono',monospace; font-size:11px; color:var(--text2); letter-spacing:2px; text-transform:uppercase; margin-bottom:6px; }
+  .header-title { font-family:'Bebas Neue',sans-serif; font-size:48px; letter-spacing:2px; line-height:1; }
+  .header-title span { color:var(--accent); }
+  .header-sub { font-size:13px; color:var(--text2); margin-top:8px; }
+
+  /* CARDS */
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px; margin:0 16px 12px; }
+  .card-label { font-family:'DM Mono',monospace; font-size:10px; color:var(--text2); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:10px; }
+  .card-title { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:1px; color:var(--text); }
+  
+  /* TODAY */
+  .today-hero { margin:0 16px 12px; background:var(--accent); border-radius:12px; padding:20px; position:relative; overflow:hidden; }
+  .today-hero::after { content:''; position:absolute; right:-20px; top:-20px; width:120px; height:120px; background:rgba(0,0,0,.08); border-radius:50%; }
+  .today-hero-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; color:#000; opacity:.6; margin-bottom:4px; }
+  .today-hero-day { font-family:'Bebas Neue',sans-serif; font-size:40px; color:#000; line-height:1; }
+  .today-hero-date { font-size:13px; color:#000; opacity:.7; margin-top:4px; }
+
+  .session-block { background:var(--surface2); border-radius:10px; padding:14px; margin-bottom:10px; border-left:3px solid var(--accent); }
+  .session-block.rehab { border-left-color: var(--accent3); }
+  .session-block.recovery { border-left-color: var(--green); }
+  .session-block.run { border-left-color: var(--accent2); }
+  .session-block.crossfit { border-left-color: var(--red); }
+  .session-block.hyrox { border-left-color: var(--accent); }
+  .session-type { font-family:'DM Mono',monospace; font-size:10px; color:var(--text2); letter-spacing:1px; text-transform:uppercase; margin-bottom:4px; }
+  .session-name { font-size:16px; font-weight:600; margin-bottom:8px; }
+  .session-details { font-size:13px; color:var(--text2); line-height:1.6; }
+  .session-tag { display:inline-block; font-size:10px; font-family:'DM Mono',monospace; padding:3px 8px; border-radius:4px; margin-right:6px; margin-top:6px; }
+  .tag-am { background:rgba(232,255,71,.15); color:var(--accent); }
+  .tag-pm { background:rgba(255,107,53,.15); color:var(--accent2); }
+  .tag-any { background:rgba(71,196,255,.15); color:var(--accent3); }
+
+  /* WEEK VIEW */
+  .week-nav { display:flex; align-items:center; justify-content:space-between; padding:16px; }
+  .week-title { font-family:'Bebas Neue',sans-serif; font-size:24px; letter-spacing:1px; }
+  .week-btn { width:36px; height:36px; border-radius:8px; background:var(--surface2); border:1px solid var(--border); color:var(--text); cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .day-pill { display:flex; gap:8px; padding:0 16px; overflow-x:auto; scrollbar-width:none; margin-bottom:16px; }
+  .day-pill::-webkit-scrollbar { display:none; }
+  .day-chip { flex-shrink:0; padding:8px 14px; border-radius:20px; background:var(--surface2); border:1px solid var(--border); cursor:pointer; text-align:center; transition:all .2s; }
+  .day-chip.active { background:var(--accent); border-color:var(--accent); }
+  .day-chip-name { font-size:11px; font-weight:500; color:var(--text2); text-transform:uppercase; letter-spacing:.5px; }
+  .day-chip.active .day-chip-name { color:#000; }
+  .day-chip-num { font-family:'Bebas Neue',sans-serif; font-size:20px; color:var(--text); }
+  .day-chip.active .day-chip-num { color:#000; }
+  .day-chip-dot { width:5px; height:5px; border-radius:50%; background:var(--accent2); margin:3px auto 0; }
+  .day-chip.rest .day-chip-dot { background:var(--text3); }
+
+  /* STATS / LOG */
+  .metrics-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:0 16px; margin-bottom:12px; }
+  .metric-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:14px; }
+  .metric-label { font-family:'DM Mono',monospace; font-size:10px; color:var(--text2); letter-spacing:1px; margin-bottom:6px; }
+  .metric-value { font-family:'Bebas Neue',sans-serif; font-size:32px; letter-spacing:1px; }
+  .metric-unit { font-size:12px; color:var(--text2); margin-left:3px; font-family:'DM Sans',sans-serif; font-weight:400; }
+  .metric-trend { font-size:11px; margin-top:4px; }
+  .trend-up { color:var(--green); }
+  .trend-down { color:var(--red); }
+  .trend-neutral { color:var(--text2); }
+
+  .whoop-bar { height:6px; border-radius:3px; background:var(--surface2); margin-top:8px; overflow:hidden; }
+  .whoop-fill { height:100%; border-radius:3px; transition:width .5s ease; }
+  .fill-green { background:var(--green); }
+  .fill-yellow { background:var(--yellow); }
+  .fill-red { background:var(--red); }
+  .fill-blue { background:var(--accent3); }
+
+  /* LOG FORM */
+  .log-section { padding:0 16px; margin-bottom:16px; }
+  .log-title { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:1px; margin-bottom:12px; color:var(--text2); }
+  .input-row { display:flex; gap:10px; margin-bottom:10px; }
+  .input-group { flex:1; }
+  .input-label { font-family:'DM Mono',monospace; font-size:10px; color:var(--text2); letter-spacing:1px; margin-bottom:5px; }
+  .input-field { width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:15px; outline:none; transition:border-color .2s; }
+  .input-field:focus { border-color:var(--accent); }
+  .save-btn { width:100%; background:var(--accent); color:#000; border:none; border-radius:10px; padding:14px; font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:1px; cursor:pointer; margin-top:6px; transition:opacity .2s; }
+  .save-btn:active { opacity:.8; }
+
+  /* HISTORY CHART */
+  .chart-area { margin:0 16px; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px; margin-bottom:12px; }
+  .chart-title { font-family:'DM Mono',monospace; font-size:11px; color:var(--text2); letter-spacing:1px; margin-bottom:14px; }
+  .chart-canvas { width:100%; height:100px; position:relative; }
+  .chart-line { display:flex; align-items:flex-end; gap:4px; height:80px; }
+  .chart-bar { flex:1; border-radius:3px 3px 0 0; min-height:4px; transition:height .3s ease; cursor:pointer; position:relative; }
+  .chart-bar.weight { background:var(--accent3); }
+  .chart-bar.recovery { background:var(--green); opacity:.8; }
+  .chart-labels { display:flex; gap:4px; margin-top:4px; }
+  .chart-label { flex:1; text-align:center; font-size:9px; color:var(--text3); font-family:'DM Mono',monospace; }
+
+  /* PLAN PAGE */
+  .phase-card { margin:0 16px 12px; border-radius:12px; overflow:hidden; }
+  .phase-header { padding:16px; display:flex; justify-content:space-between; align-items:center; }
+  .phase-1 .phase-header { background:linear-gradient(135deg,#1a2a0a,#2a3a0a); border:1px solid rgba(232,255,71,.3); }
+  .phase-2 .phase-header { background:linear-gradient(135deg,#0a1a2a,#0a2a3a); border:1px solid rgba(71,196,255,.3); }
+  .phase-3 .phase-header { background:linear-gradient(135deg,#2a0a0a,#3a1a0a); border:1px solid rgba(255,107,53,.3); }
+  .phase-name { font-family:'Bebas Neue',sans-serif; font-size:26px; letter-spacing:1px; }
+  .phase-dates { font-family:'DM Mono',monospace; font-size:10px; color:var(--text2); margin-top:2px; }
+  .phase-badge { font-family:'DM Mono',monospace; font-size:11px; padding:6px 12px; border-radius:20px; }
+  .phase-1 .phase-badge { background:rgba(232,255,71,.15); color:var(--accent); }
+  .phase-2 .phase-badge { background:rgba(71,196,255,.15); color:var(--accent3); }
+  .phase-3 .phase-badge { background:rgba(255,107,53,.15); color:var(--accent2); }
+  .phase-body { background:var(--surface); border:1px solid var(--border); border-top:none; padding:14px; border-radius:0 0 12px 12px; }
+  .phase-goal { font-size:13px; color:var(--text2); line-height:1.6; margin-bottom:10px; }
+  .phase-focus { display:flex; flex-wrap:wrap; gap:6px; }
+  .focus-tag { font-size:11px; padding:4px 10px; border-radius:6px; background:var(--surface2); color:var(--text2); border:1px solid var(--border); }
+
+  /* GOALS */
+  .goals-row { display:flex; gap:10px; padding:0 16px; margin-bottom:10px; }
+  .goal-card { flex:1; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:14px; text-align:center; }
+  .goal-icon { font-size:24px; margin-bottom:6px; }
+  .goal-label { font-family:'DM Mono',monospace; font-size:9px; color:var(--text2); letter-spacing:1px; margin-bottom:4px; }
+  .goal-current { font-family:'Bebas Neue',sans-serif; font-size:22px; color:var(--text2); }
+  .goal-arrow { color:var(--accent); font-size:16px; margin:2px 0; }
+  .goal-target { font-family:'Bebas Neue',sans-serif; font-size:22px; color:var(--accent); }
+
+  /* TOAST */
+  .toast { position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-80px); background:var(--accent); color:#000; padding:12px 24px; border-radius:8px; font-weight:600; font-size:14px; z-index:999; transition:transform .3s ease; }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+
+  /* SCROLL */
+  ::-webkit-scrollbar { width:0; }
+
+  .section-divider { height:1px; background:var(--border); margin:16px 16px; }
+
+  .rest-day { margin:0 16px; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:30px; text-align:center; }
+  .rest-day-icon { font-size:40px; margin-bottom:10px; }
+  .rest-day-title { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:1px; margin-bottom:6px; }
+  .rest-day-sub { font-size:13px; color:var(--text2); line-height:1.6; }
+
+  .streak-row { display:flex; gap:6px; padding:0 16px; margin-bottom:16px; }
+  .streak-dot { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:14px; }
+  .streak-done { background:rgba(46,213,115,.2); border:1px solid var(--green); }
+  .streak-today { background:var(--accent); }
+  .streak-future { background:var(--surface2); border:1px solid var(--border); }
+
+  .pill-tabs { display:flex; gap:8px; padding:0 16px; margin-bottom:16px; overflow-x:auto; scrollbar-width:none; }
+  .pill-tab { flex-shrink:0; padding:7px 16px; border-radius:20px; font-size:13px; font-weight:500; cursor:pointer; border:1px solid var(--border); background:var(--surface2); color:var(--text2); transition:all .2s; }
+  .pill-tab.active { background:var(--accent); border-color:var(--accent); color:#000; }
+</style>
+</head>
+<body>
+
+<div id="toast" class="toast">✓ Salvato!</div>
+
+<!-- PAGE: TODAY -->
+<div id="page-today" class="page active">
+  <div class="header">
+    <div class="header-label">ATLAS Training OS</div>
+    <div class="header-title">OGGI <span id="today-day-name">LUN</span></div>
+    <div class="header-sub" id="today-full-date">24 Marzo 2026</div>
+  </div>
+
+  <div class="streak-row" id="streak-row"></div>
+
+  <div id="today-content"></div>
+</div>
+
+<!-- PAGE: WEEK -->
+<div id="page-week" class="page">
+  <div class="header">
+    <div class="header-label">Programmazione</div>
+    <div class="header-title">SETTIMANA <span id="week-num-display">1</span></div>
+  </div>
+  <div class="week-nav">
+    <button class="week-btn" onclick="changeWeek(-1)">&#8592;</button>
+    <div class="week-title" id="week-range-title">31 Mar — 6 Apr</div>
+    <button class="week-btn" onclick="changeWeek(1)">&#8594;</button>
+  </div>
+  <div class="day-pill" id="day-pill"></div>
+  <div id="week-day-content"></div>
+</div>
+
+<!-- PAGE: STATS -->
+<div id="page-stats" class="page">
+  <div class="header">
+    <div class="header-label">Dashboard</div>
+    <div class="header-title">I TUOI <span style="color:var(--accent)">DATI</span></div>
+  </div>
+
+  <div class="goals-row">
+    <div class="goal-card">
+      <div class="goal-icon">🏁</div>
+      <div class="goal-label">HYROX</div>
+      <div class="goal-current" id="g-hyrox-current">75'</div>
+      <div class="goal-arrow">↓</div>
+      <div class="goal-target">SUB 60'</div>
+    </div>
+    <div class="goal-card">
+      <div class="goal-icon">🏃</div>
+      <div class="goal-label">HALF MAR</div>
+      <div class="goal-current" id="g-half-current">1h52'</div>
+      <div class="goal-arrow">↓</div>
+      <div class="goal-target">SUB 1h30'</div>
+    </div>
+  </div>
+
+  <div class="metrics-grid" id="metrics-grid">
+    <div class="metric-card">
+      <div class="metric-label">RECOVERY</div>
+      <div class="metric-value" id="m-recovery" style="color:var(--green)">—<span class="metric-unit">%</span></div>
+      <div class="whoop-bar"><div class="whoop-fill fill-green" id="bar-recovery" style="width:0%"></div></div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">HRV</div>
+      <div class="metric-value" id="m-hrv" style="color:var(--accent3)">—<span class="metric-unit">ms</span></div>
+      <div class="whoop-bar"><div class="whoop-fill fill-blue" id="bar-hrv" style="width:0%"></div></div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">SLEEP SCORE</div>
+      <div class="metric-value" id="m-sleep" style="color:var(--accent)">—<span class="metric-unit">%</span></div>
+      <div class="whoop-bar"><div class="whoop-fill fill-green" id="bar-sleep" style="width:0%"></div></div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">PESO</div>
+      <div class="metric-value" id="m-weight" style="color:var(--text)">—<span class="metric-unit">kg</span></div>
+      <div class="metric-trend" id="t-weight">—</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">MASSA GRASSA</div>
+      <div class="metric-value" id="m-fat" style="color:var(--accent2)">—<span class="metric-unit">%</span></div>
+      <div class="metric-trend" id="t-fat">—</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">MASSA MUSC.</div>
+      <div class="metric-value" id="m-muscle" style="color:var(--green)">—<span class="metric-unit">kg</span></div>
+      <div class="metric-trend" id="t-muscle">—</div>
+    </div>
+  </div>
+
+  <div class="chart-area">
+    <div class="chart-title">RECOVERY SCORE — ULTIMI 7 GIORNI</div>
+    <div class="chart-line" id="chart-recovery"></div>
+    <div class="chart-labels" id="chart-labels"></div>
+  </div>
+
+  <div class="chart-area">
+    <div class="chart-title">PESO — ULTIMI 7 GIORNI</div>
+    <div class="chart-line" id="chart-weight"></div>
+    <div class="chart-labels" id="chart-weight-labels"></div>
+  </div>
+</div>
+
+<!-- PAGE: LOG -->
+<div id="page-log" class="page">
+  <div class="header">
+    <div class="header-label">Daily Check-in</div>
+    <div class="header-title">LOG <span style="color:var(--accent)">OGGI</span></div>
+    <div class="header-sub" id="log-date-sub"></div>
+  </div>
+
+  <div class="log-section">
+    <div class="log-title">WHOOP</div>
+    <div class="input-row">
+      <div class="input-group">
+        <div class="input-label">RECOVERY %</div>
+        <input class="input-field" type="number" id="inp-recovery" placeholder="0-100" min="0" max="100">
+      </div>
+      <div class="input-group">
+        <div class="input-label">HRV (ms)</div>
+        <input class="input-field" type="number" id="inp-hrv" placeholder="es. 65">
+      </div>
+    </div>
+    <div class="input-row">
+      <div class="input-group">
+        <div class="input-label">SLEEP SCORE %</div>
+        <input class="input-field" type="number" id="inp-sleep" placeholder="0-100" min="0" max="100">
+      </div>
+      <div class="input-group">
+        <div class="input-label">ORE SONNO</div>
+        <input class="input-field" type="number" id="inp-sleep-hrs" placeholder="es. 7.5" step="0.5">
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <div class="log-section">
+    <div class="log-title">BILANCIA</div>
+    <div class="input-row">
+      <div class="input-group">
+        <div class="input-label">PESO (kg)</div>
+        <input class="input-field" type="number" id="inp-weight" placeholder="es. 78.5" step="0.1">
+      </div>
+      <div class="input-group">
+        <div class="input-label">MASSA GRASSA %</div>
+        <input class="input-field" type="number" id="inp-fat" placeholder="es. 15.2" step="0.1">
+      </div>
+    </div>
+    <div class="input-row">
+      <div class="input-group">
+        <div class="input-label">MASSA MUSC. (kg)</div>
+        <input class="input-field" type="number" id="inp-muscle" placeholder="es. 38.0" step="0.1">
+      </div>
+      <div class="input-group">
+        <div class="input-label">ACQUA CORP. %</div>
+        <input class="input-field" type="number" id="inp-water" placeholder="es. 58.0" step="0.1">
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <div class="log-section">
+    <div class="log-title">DOLORE GINOCCHIO</div>
+    <div class="input-row">
+      <div class="input-group">
+        <div class="input-label">INTENSITÀ (1-10)</div>
+        <input class="input-field" type="number" id="inp-knee" placeholder="1-10" min="1" max="10">
+      </div>
+      <div class="input-group">
+        <div class="input-label">NOTE</div>
+        <input class="input-field" type="text" id="inp-knee-note" placeholder="es. dopo squat">
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <div class="log-section">
+    <div class="log-title">SESSIONE</div>
+    <div class="input-row">
+      <div class="input-group">
+        <div class="input-label">RPE (1-10)</div>
+        <input class="input-field" type="number" id="inp-rpe" placeholder="percezione fatica" min="1" max="10">
+      </div>
+      <div class="input-group">
+        <div class="input-label">DURATA (min)</div>
+        <input class="input-field" type="number" id="inp-duration" placeholder="es. 60">
+      </div>
+    </div>
+    <div class="input-group" style="padding:0">
+      <div class="input-label" style="padding:0 0 5px">NOTE ALLENAMENTO</div>
+      <input class="input-field" type="text" id="inp-notes" placeholder="Come ti sei sentito...">
+    </div>
+  </div>
+
+  <div class="log-section">
+    <button class="save-btn" onclick="saveLog()">SALVA CHECK-IN</button>
+  </div>
+</div>
+
+<!-- PAGE: PLAN -->
+<div id="page-plan" class="page">
+  <div class="header">
+    <div class="header-label">Macropiano</div>
+    <div class="header-title">IL TUO <span style="color:var(--accent)">PIANO</span></div>
+    <div class="header-sub">20 Aprile → Settembre 2026</div>
+  </div>
+
+  <div class="goals-row">
+    <div class="goal-card">
+      <div class="goal-icon">⚡</div>
+      <div class="goal-label">HYROX TARGET</div>
+      <div class="goal-target" style="font-size:28px">SUB 60'</div>
+    </div>
+    <div class="goal-card">
+      <div class="goal-icon">🎯</div>
+      <div class="goal-label">HALF TARGET</div>
+      <div class="goal-target" style="font-size:28px">SUB 1:30</div>
+    </div>
+  </div>
+  <div class="goals-row">
+    <div class="goal-card">
+      <div class="goal-icon">💪</div>
+      <div class="goal-label">MASSA MUSC.</div>
+      <div class="goal-current" style="font-size:22px">72.5 kg</div>
+      <div class="goal-arrow">↑</div>
+      <div class="goal-target" style="font-size:22px">76 kg</div>
+    </div>
+    <div class="goal-card">
+      <div class="goal-icon">📅</div>
+      <div class="goal-label">DEADLINE</div>
+      <div class="goal-target" style="font-size:20px">SETTEMBRE</div>
+    </div>
+  </div>
+
+  <div class="phase-card phase-1">
+    <div class="phase-header">
+      <div>
+        <div class="phase-name">FASE 1 — BASE</div>
+        <div class="phase-dates">20 APR → 25 MAG (6 settimane)</div>
+      </div>
+      <div class="phase-badge">FOUNDATION</div>
+    </div>
+    <div class="phase-body">
+      <div class="phase-goal">Costruire la base aerobica, correggere il pelvic tilt, introdurre i movimenti Hyrox con tecnica corretta. Volume moderato, intensità controllata.</div>
+      <div class="phase-focus">
+        <span class="focus-tag">Corsa Z2 60%</span>
+        <span class="focus-tag">Pelvic tilt rehab</span>
+        <span class="focus-tag">Tecnica Hyrox</span>
+        <span class="focus-tag">Crossfit 2x/sett</span>
+        <span class="focus-tag">Pace Club 1x/sett</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase-card phase-2">
+    <div class="phase-header">
+      <div>
+        <div class="phase-name">FASE 2 — BUILD</div>
+        <div class="phase-dates">26 MAG → 6 LUG (6 settimane)</div>
+      </div>
+      <div class="phase-badge">INTENSITY</div>
+    </div>
+    <div class="phase-body">
+      <div class="phase-goal">Aumentare il volume e l'intensità. Introdurre interval training, soglia lattato, simulazioni Hyrox parziali. Rinforzo muscolare progressivo.</div>
+      <div class="phase-focus">
+        <span class="focus-tag">Interval run</span>
+        <span class="focus-tag">Threshold work</span>
+        <span class="focus-tag">Sled/Rig heavy</span>
+        <span class="focus-tag">Long run 15-18km</span>
+        <span class="focus-tag">Strength +</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase-card phase-3">
+    <div class="phase-header">
+      <div>
+        <div class="phase-name">FASE 3 — PEAK</div>
+        <div class="phase-dates">7 LUG → 14 SET (10 settimane)</div>
+      </div>
+      <div class="phase-badge">RACE READY</div>
+    </div>
+    <div class="phase-body">
+      <div class="phase-goal">Simulazioni gara complete, affinamento della strategia di gara, tapering nelle ultime 2 settimane. Picco della forma fisica.</div>
+      <div class="phase-focus">
+        <span class="focus-tag">Full Hyrox sim</span>
+        <span class="focus-tag">Race pace run</span>
+        <span class="focus-tag">Tapering sett 9-10</span>
+        <span class="focus-tag">Peak condition</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">STRUTTURA SETTIMANALE TIPO</div>
+    <div style="margin-top:4px">
+      <div class="session-block run" style="margin-bottom:8px">
+        <div class="session-type">LUN / MER / VEN</div>
+        <div class="session-name">Corsa + Full Body Gym (A/B/C)</div>
+        <div class="session-details">Doppia sessione flessibile: corsa (Z2, interval o long run) + full body ipertrofia in palestra. Split A il lunedì, B il mercoledì, C il venerdì.</div>
+        <span class="session-tag tag-any">⚡ DOPPIA SESSIONE</span>
+      </div>
+      <div class="session-block crossfit" style="margin-bottom:8px">
+        <div class="session-type">MAR / GIO</div>
+        <div class="session-name">Crossfit</div>
+        <div class="session-details">Segui la programmazione del box. Può variare tra forza, metcon, olympic lifting. Includi routine pelvic tilt post-sessione.</div>
+        <span class="session-tag tag-any">⚡ FLESSIBILE</span>
+      </div>
+      <div class="session-block hyrox" style="margin-bottom:8px">
+        <div class="session-type">SAB — FISSO</div>
+        <div class="session-name">Hyrox Training</div>
+        <div class="session-details">Sessione Hyrox strutturata ogni sabato mattina. Progressione: 3-4 stazioni (Fase 1) → 6 stazioni (Fase 2) → simulazione completa (Fase 3).</div>
+        <span class="session-tag tag-am">🌅 MATTINA FISSA</span>
+      </div>
+      <div class="session-block recovery">
+        <div class="session-type">DOM</div>
+        <div class="session-name">Riposo Attivo</div>
+        <div class="session-details">Nessun carico. Camminata, stretching, sauna o cold plunge. Routine pelvic tilt 10 min obbligatoria.</div>
+        <span class="session-tag tag-any">⚡ RECOVERY</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">ROUTINE GIORNALIERA — OGNI GIORNO</div>
+    <div class="session-details" style="line-height:2">
+      🌅 <strong>Mattina:</strong> 10 min — pelvic tilt + hip flexor stretch + glute activation<br>
+      🏋️ <strong>Pre-allenamento:</strong> 10 min warm-up specifico + terminal knee extension<br>
+      ❄️ <strong>Post-allenamento:</strong> Foam roller + theragun (ghiaccio ginocchio se >4/10)<br>
+      🌙 <strong>Sera:</strong> Diclofenac gel ginocchio + stretching 10 min
+    </div>
+  </div>
+</div>
+
+<!-- NAVIGATION -->
+<nav class="nav">
+  <div class="nav-btn active" onclick="showPage('today')" id="nav-today">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    OGGI
+  </div>
+  <div class="nav-btn" onclick="showPage('week')" id="nav-week">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    PIANO
+  </div>
+  <div class="nav-btn" onclick="showPage('stats')" id="nav-stats">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    STATS
+  </div>
+  <div class="nav-btn" onclick="showPage('log')" id="nav-log">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    LOG
+  </div>
+  <div class="nav-btn" onclick="showPage('plan')" id="nav-plan">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    MACRO
+  </div>
+</nav>
+
+<script>
+// =================== DATA ===================
+const PLAN_START = new Date('2026-04-20');
+const RACE_1_DATE = new Date('2026-03-29'); // gara domenica
+const RACE_2_DATE = new Date('2026-04-17'); // Hyrox
+
+const DAYS_IT = ['Dom','Lun','Mar','Mer','Gio','Ven','Sab'];
+const MONTHS_IT = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+
+// Weekly plan template (repeating, adapted by phase)
+// day 0=Mon, 1=Tue, 2=Wed, 3=Thu, 4=Fri, 5=Sat, 6=Sun
+// STRUCTURE: Mon/Wed/Fri = Full Body Gym + Run | Tue/Thu = Crossfit | Sat = Hyrox | Sun = Rest
+function getWeekPlan(weekNum) {
+  const isPhase1 = weekNum <= 6;
+  const isPhase2 = weekNum > 6 && weekNum <= 12;
+  const isPhase3 = weekNum > 12;
+
+  // Full body gym details vary by phase
+  const fbA = isPhase1
+    ? 'FULL BODY A — Squat goblet 4x10 · Romanian DL 4x10 · Push-up/Bench press 4x10 · DB Row 4x10 · Hip thrust 4x12 · Plank 3x45s. Recupero 90s. Focus: tecnica e connessione mente-muscolo.'
+    : isPhase2
+    ? 'FULL BODY A — Back squat 4x8 · Romanian DL 4x8 · Bench press 4x8 · Barbell row 4x8 · Hip thrust 4x10 · Dead bug 3x12. Carico progressivo +2.5kg/sett.'
+    : 'FULL BODY A — Back squat 5x5 pesante · RDL 4x6 · Bench press 5x5 · Pendlay row 4x6 · Hip thrust 4x8 · Copenhagen plank 3x25s. Massima intensità.';
+
+  const fbB = isPhase1
+    ? 'FULL BODY B — Stacco da terra 4x8 · Affondi cammino 3x12/lato · Overhead press 4x10 · Lat pulldown 4x10 · Glute bridge monogamba 3x15 · Bird dog 3x10. Focus postura neutra del bacino.'
+    : isPhase2
+    ? 'FULL BODY B — Stacco 4x6 · Step-up pesante 4x10/lato · OHP 4x8 · Pull-up/Assisted 4x8 · Bulgarian split squat 3x10 · Pallof press 3x12. Intensità media-alta.'
+    : 'FULL BODY B — Stacco 5x4 pesante · Bulgarian split squat 4x8 · OHP 5x5 · Weighted pull-up 4x6 · Single leg hip thrust 4x10 · Ab wheel 3x12. Peak strength.';
+
+  const fbC = isPhase1
+    ? 'FULL BODY C — Leg press 4x12 · Nordic curl 3x6 · Dips/Chest dip 4x10 · Cable row 4x12 · Abductor machine 3x15 · Dead bug 3x10. Giornata più di volume, meno intensità.'
+    : isPhase2
+    ? 'FULL BODY C — Hack squat 4x10 · Nordic curl 4x8 · Dips pesanti 4x10 · Chest supported row 4x10 · RDL monogamba 3x10 · Pallof press 3x12. Volume alto.'
+    : 'FULL BODY C — Leg press heavy 4x8 · Nordic curl 4x6 · Weighted dips 4x8 · T-bar row 4x8 · Hip thrust bilanciere 5x8 · Hanging knee raise 3x15. Massimo volume.';
+
+  const plans = {
+    0: { // Monday — Run + Full Body A
+      sessions: [
+        { type:'run', label:'FLESSIBILE', name: isPhase1 ? 'Corsa Zona 2 — 45 min' : isPhase2 ? 'Corsa Z2 + Strides — 50 min' : 'Corsa Tempo — 55 min', tag:'tag-any',
+          details: isPhase1 ? '45 min corsa facile Z2 (conversazionale, 65-70% FC max). Costruisce la base aerobica fondamentale per la half marathon.' : isPhase2 ? '40 min Z2 + 4x100m strides a fine corsa. Inizia a lavorare sulla velocità di passo.' : '10 min warm-up + 30 min a ritmo gara half (target sub 4\'16\"/km) + 10 min cool-down.' },
+        { type:'crossfit', label:'FLESSIBILE', name:'Full Body A — Ipertrofia', tag:'tag-any',
+          details: fbA },
+        { type:'rehab', label:'PRE-ALLENAMENTO', name:'Routine Pelvic Tilt + Ginocchio (10 min)', tag:'tag-any',
+          details: 'Pelvic tilt supino 3x15 · Hip flexor stretch 60s/lato · Cat-cow 10 rip · Glute bridge 3x15 · Terminal knee extension 3x20' },
+        { type:'recovery', label:'POST-TUTTO', name:'Recovery', tag:'tag-any',
+          details: 'Foam roller quadricipite + hamstring + IT band · Theragun polpaccio · Ghiaccio ginocchio 15 min se dolore >4/10 · Diclofenac gel sera' },
+      ]
+    },
+    1: { // Tuesday — Crossfit
+      sessions: [
+        { type:'crossfit', label:'MATTINA O SERA', name:'Crossfit — Sessione 1', tag:'tag-any',
+          details: 'Segui la programmazione del box. Può essere forza (strength day), metcon, o misto. Segnala il ginocchio al coach se ci sono movimenti problematici. Se recovery Whoop <40% scala intensità.' },
+        { type:'rehab', label:'PRE-CROSSFIT', name:'Attivazione Gluti + Ginocchio (10 min)', tag:'tag-any',
+          details: 'Clamshell 3x15 · Terminal knee extension 3x20 · Hip flexor stretch 60s/lato · Glute activation walk con elastico 2x15m' },
+        { type:'recovery', label:'POST-CROSSFIT', name:'Recovery', tag:'tag-any',
+          details: isPhase1 ? 'FASE 1 PELVIC TILT — Foam roller ileo-psoas 2min/lato · Hip flexor stretch 60s/lato · Dead bug 3x10 · Bird dog 3x10 · Glute bridge 3x15' : 'FASE 2 PELVIC TILT — Hip thrust bilanciere 4x10 · RDL monogamba 3x10/lato · Copenhagen plank 3x20s · Pallof press 3x12 · Step-up controllato 3x10/lato' },
+      ]
+    },
+    2: { // Wednesday — Run + Full Body B
+      sessions: [
+        { type:'run', label:'FLESSIBILE', name: isPhase1 ? 'Corsa Easy + Strides — 40 min' : isPhase2 ? 'Interval Training' : 'Corsa Soglia', tag:'tag-any',
+          details: isPhase1 ? '35 min easy Z2 + 4x100m strides a fine. Giornata di volume moderato, non stressare.' : isPhase2 ? '10 min warm-up + 6x800m a ritmo 5K con 90s recupero + 10 min cool-down. Sessione chiave per migliorare la velocità.' : '10 min warm-up + 4x2km a ritmo gara half con 2 min recupero + 10 min cool-down.' },
+        { type:'crossfit', label:'FLESSIBILE', name:'Full Body B — Ipertrofia', tag:'tag-any',
+          details: fbB },
+        { type:'rehab', label:'PRE-ALLENAMENTO', name:'Routine Pelvic Tilt (10 min)', tag:'tag-any',
+          details: 'Pelvic tilt supino 3x15 · Cat-cow 10 rip · Dead bug 3x10/lato · Bird dog 3x10/lato · Hip flexor stretch 60s/lato' },
+        { type:'recovery', label:'SERA', name:'Recovery Completo', tag:'tag-any',
+          details: 'Sauna 15-20 min (se disponibile) · Foam roller full body · Stretching profondo 10 min · Diclofenac gel ginocchio' },
+      ]
+    },
+    3: { // Thursday — Crossfit
+      sessions: [
+        { type:'crossfit', label:'MATTINA O SERA', name:'Crossfit — Sessione 2', tag:'tag-any',
+          details: 'Seconda sessione crossfit settimanale. La programmazione del box può variare: forza, metcon, olympic lifting, ecc. Se ieri (Mer) è stato intenso, comunica al coach di avere le gambe pesanti.' },
+        { type:'rehab', label:'PRE-CROSSFIT', name:'Attivazione (10 min)', tag:'tag-any',
+          details: 'Terminal knee extension 3x20 · Clamshell 2x15 · Hip flexor stretch 45s/lato · Shoulder warm-up con elastico' },
+        { type:'recovery', label:'POST-CROSSFIT', name:'Recovery + Pelvic Tilt', tag:'tag-any',
+          details: isPhase1 ? 'FASE 1 — Foam roller completo · Hip thrust BW 3x15 · Pelvic tilt 3x15 · Stretching ischio-crurali 60s/lato · Cold plunge o ghiaccio ginocchio' : 'FASE 2 — Foam roller · Hip thrust pesante 3x10 · Bulgarian split squat 3x10 · Stretching completo 10 min · Cold plunge' },
+      ]
+    },
+    4: { // Friday — Long Run + Full Body C
+      sessions: [
+        { type:'run', label:'MATTINA (PREFERIBILE)', name: isPhase1 ? 'Long Run — 12 km Z2' : isPhase2 ? 'Long Run — 15 km' : 'Long Run — 18 km', tag:'tag-any',
+          details: isPhase1 ? '12 km interamente a Z2 (conversazionale). Non andare sopra 75% FC max. È il giorno più importante per la half marathon. Porta acqua.' : isPhase2 ? '15 km: km 1-12 Z2, km 13-15 a ritmo target half. Testa la tua idratazione.' : '18 km: km 1-12 Z2, km 13-17 a ritmo gara, km 18 cool-down. Nutrition strategy test.' },
+        { type:'crossfit', label:'SERA', name:'Full Body C — Volume', tag:'tag-any',
+          details: fbC },
+        { type:'rehab', label:'POST-LONG RUN', name:'Strength Correttivo (20 min)', tag:'tag-any',
+          details: 'Hip thrust 3x10 · Step-up controllato 3x10/lato · Pallof press 3x12 · Stretching hip flexor 60s/lato · Stretching hamstring 60s/lato' },
+        { type:'recovery', label:'FINE GIORNATA', name:'Recovery Pre-Hyrox', tag:'tag-any',
+          details: 'Foam roller full body · Theragun · Ghiaccio ginocchio · Stretching 10 min · Prepara gear per domani · Dormi 8h+' },
+      ]
+    },
+    5: { // Saturday — Hyrox FISSO
+      sessions: [
+        { type:'hyrox', label:'MATTINA — FISSO', name: isPhase1 ? 'Hyrox Training — 3-4 Stazioni' : isPhase2 ? 'Hyrox Training — 6 Stazioni' : 'Full Hyrox Simulation', tag:'tag-am',
+          details: isPhase1 ? 'Sessione Hyrox strutturata: 1km corsa + Ski erg 1000m + 1km + Sled push 2 giri + 1km + Wall balls 50 rip. Cronometra tutto. Focus sulla transizione corsa→stazione.' : isPhase2 ? '6 stazioni complete + corsa intermedia a ritmo gara. Stazioni: Ski erg · Sled push · Sled pull · Burpee broad jump · Row · Farmers carry. Cronometra ogni split.' : 'Simulazione completa tutte 8 stazioni. Target: finire sotto 65 min (Fase 3 sett 1-4) poi sotto 60 min (sett 5-10). Tratta come una gara vera.' },
+        { type:'run', label:'FLESSIBILE', name: isPhase1 ? 'Corsa Aggiuntiva — 20 min easy (opzionale)' : isPhase2 ? 'Corsa Cool-down — 15 min' : 'Corsa Post-Sim — 15 min', tag:'tag-any',
+          details: 'Solo se ti senti bene. Corsa leggerissima per sciogliere le gambe dopo le stazioni. Niente sforzo.' },
+        { type:'recovery', label:'POST-HYROX', name:'Recovery Completo (30 min)', tag:'tag-any',
+          details: 'Foam roller full body 15 min (quadricipite, IT band, polpaccio, hamstring) · Stretching profondo · Theragun · Ghiaccio ginocchio · Sauna se disponibile' },
+      ]
+    },
+    6: { // Sunday — Rest
+      isRest: true,
+      sessions: [
+        { type:'recovery', label:'TUTTO IL GIORNO', name:'Riposo Attivo', tag:'tag-any',
+          details: 'Camminata 30-45 min · Nessun carico · Sauna o cold plunge · Idratazione abbondante · Giorno di ricarica calorica se hai fame.' },
+        { type:'rehab', label:'MATTINA', name:'Routine Pelvic Tilt (10 min) — NON SALTARE', tag:'tag-any',
+          details: 'Anche oggi! Pelvic tilt 15 rip · Hip flexor stretch 60s/lato · Cat-cow 10 rip · Glute bridge 15 rip · Dead bug 10 rip/lato · Stretching completo 15 min' },
+      ]
+    }
+  };
+  return plans;
+}
+
+// =================== STATE ===================
+let currentPage = 'today';
+let currentWeek = 1;
+let selectedWeekDay = 0; // Monday
+let logData = JSON.parse(localStorage.getItem('atlas-logs') || '{}');
+
+// =================== HELPERS ===================
+function todayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+}
+
+function dateKey(d) {
+  return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+}
+
+function formatDate(d) {
+  return `${d.getDate()} ${MONTHS_IT[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+function getDayOfWeek(d) {
+  // 0=Sun,1=Mon...6=Sat → convert to Mon=0
+  return (d.getDay() + 6) % 7;
+}
+
+function getWeekNumber(d) {
+  const diff = d - PLAN_START;
+  if (diff < 0) return 0;
+  return Math.floor(diff / (7 * 24 * 3600 * 1000)) + 1;
+}
+
+function isInPlanPeriod(d) {
+  return d >= PLAN_START;
+}
+
+// =================== NAV ===================
+function showPage(p) {
+  document.querySelectorAll('.page').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(x => x.classList.remove('active'));
+  document.getElementById('page-' + p).classList.add('active');
+  document.getElementById('nav-' + p).classList.add('active');
+  currentPage = p;
+  if (p === 'stats') renderStats();
+  if (p === 'week') renderWeek();
+  if (p === 'log') renderLog();
+}
+
+// =================== TODAY PAGE ===================
+function renderToday() {
+  const today = new Date();
+  const dow = getDayOfWeek(today);
+  const dayNames = ['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato','Domenica'];
+  const dayNamesShort = ['LUN','MAR','MER','GIO','VEN','SAB','DOM'];
+
+  document.getElementById('today-day-name').textContent = dayNamesShort[dow];
+  document.getElementById('today-full-date').textContent = formatDate(today);
+  document.getElementById('log-date-sub').textContent = formatDate(today);
+
+  // Streak
+  renderStreak();
+
+  const container = document.getElementById('today-content');
+  container.innerHTML = '';
+
+  // Pre-plan period
+  if (!isInPlanPeriod(today)) {
+    const daysLeft = Math.ceil((PLAN_START - today) / (24*3600*1000));
+    container.innerHTML = `
+      <div style="margin:0 16px 12px">
+        <div class="today-hero">
+          <div class="today-hero-label">COUNTDOWN AL PIANO</div>
+          <div class="today-hero-day">${daysLeft} GIORNI</div>
+          <div class="today-hero-date">Il piano inizia il 20 Aprile 2026</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label">COSA FARE ORA</div>
+        <div class="session-details" style="line-height:2">
+          ${today <= RACE_1_DATE ? '🏁 <strong>Domenica 29 marzo</strong> — Prima gara Hyrox<br>' : ''}
+          ${today <= RACE_2_DATE ? '⚡ <strong>17 aprile</strong> — Seconda gara Hyrox<br>' : ''}
+          🦵 <strong>Recupero ginocchio</strong> — Ghiaccio, Diclofenac, TKE<br>
+          🧘 <strong>Fase 1 Pelvic Tilt</strong> — 10 min mattina, ogni giorno<br>
+          💤 <strong>Priorità al sonno</strong> — Logga tutto su Whoop
+        </div>
+      </div>`;
+    return;
+  }
+
+  const weekNum = getWeekNumber(today);
+  const plan = getWeekPlan(weekNum);
+  const dayPlan = plan[dow];
+
+  container.innerHTML = `
+    <div style="margin:0 16px 12px">
+      <div class="today-hero">
+        <div class="today-hero-label">SETTIMANA ${weekNum} · ${dow === 6 ? 'RIPOSO' : 'ALLENAMENTO'}</div>
+        <div class="today-hero-day">${dayNames[dow].toUpperCase()}</div>
+        <div class="today-hero-date">${formatDate(today)}</div>
+      </div>
+    </div>`;
+
+  if (dayPlan.isRest) {
+    container.innerHTML += `
+      <div class="rest-day">
+        <div class="rest-day-icon">😴</div>
+        <div class="rest-day-title">RIPOSO ATTIVO</div>
+        <div class="rest-day-sub">Nessun allenamento strutturato oggi. Il recupero è parte del piano, non un'eccezione.</div>
+      </div>`;
+  }
+
+  dayPlan.sessions.forEach(s => {
+    container.innerHTML += `
+      <div class="session-block ${s.type}" style="margin:0 16px 10px">
+        <div class="session-type">${s.label}</div>
+        <div class="session-name">${s.name}</div>
+        <div class="session-details">${s.details}</div>
+        <span class="session-tag ${s.tag}">${s.tag === 'tag-am' ? '🌅 MATTINA' : s.tag === 'tag-pm' ? '🌙 SERA' : '⚡ FLESSIBILE'}</span>
+      </div>`;
+  });
+
+  // Today's log preview
+  const log = logData[dateKey(today)];
+  if (log) {
+    container.innerHTML += `
+      <div class="card" style="border-color:rgba(232,255,71,.3)">
+        <div class="card-label">CHECK-IN DI OGGI ✓</div>
+        <div class="session-details" style="line-height:2">
+          ${log.recovery ? `🟢 Recovery: <strong>${log.recovery}%</strong>` : ''} ${log.hrv ? `· HRV: <strong>${log.hrv}ms</strong>` : ''}<br>
+          ${log.weight ? `⚖️ Peso: <strong>${log.weight}kg</strong>` : ''}${log.fat ? ` · Grasso: <strong>${log.fat}%</strong>` : ''}<br>
+          ${log.knee ? `🦵 Ginocchio: <strong>${log.knee}/10</strong>` : ''}
+        </div>
+      </div>`;
+  } else {
+    container.innerHTML += `
+      <div class="card" style="cursor:pointer;border-style:dashed" onclick="showPage('log')">
+        <div class="card-label">CHECK-IN MANCANTE</div>
+        <div class="session-details">Tocca per loggare Whoop, peso e ginocchio di oggi →</div>
+      </div>`;
+  }
+}
+
+// =================== STREAK ===================
+function renderStreak() {
+  const row = document.getElementById('streak-row');
+  row.innerHTML = '';
+  const today = new Date();
+  for (let i = -3; i <= 3; i++) {
+    const d = new Date(today);
+    d.setDate(d.getDate() + i);
+    const key = dateKey(d);
+    const hasLog = !!logData[key];
+    const isToday = i === 0;
+    const isFuture = i > 0;
+    let cls = isFuture ? 'streak-future' : hasLog ? 'streak-done' : 'streak-future';
+    if (isToday) cls = 'streak-today';
+    const label = isFuture ? '·' : hasLog ? '✓' : isToday ? '●' : '○';
+    row.innerHTML += `<div class="streak-dot ${cls}" style="color:${isToday?'#000':'inherit'}">${label}</div>`;
+  }
+}
+
+// =================== WEEK PAGE ===================
+function renderWeek() {
+  const weekOffset = currentWeek - 1;
+  const weekStart = new Date(PLAN_START);
+  weekStart.setDate(weekStart.getDate() + weekOffset * 7);
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekEnd.getDate() + 6);
+
+  document.getElementById('week-num-display').textContent = currentWeek;
+  document.getElementById('week-range-title').textContent =
+    `${weekStart.getDate()} ${MONTHS_IT[weekStart.getMonth()].slice(0,3)} — ${weekEnd.getDate()} ${MONTHS_IT[weekEnd.getMonth()].slice(0,3)}`;
+
+  const pill = document.getElementById('day-pill');
+  pill.innerHTML = '';
+  const dayNames = ['Lun','Mar','Mer','Gio','Ven','Sab','Dom'];
+
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(weekStart);
+    d.setDate(d.getDate() + i);
+    const isRest = i === 6;
+    const isActive = i === selectedWeekDay;
+    const hasLog = !!logData[dateKey(d)];
+    pill.innerHTML += `
+      <div class="day-chip ${isRest?'rest':''} ${isActive?'active':''}" onclick="selectWeekDay(${i})">
+        <div class="day-chip-name">${dayNames[i]}</div>
+        <div class="day-chip-num">${d.getDate()}</div>
+        <div class="day-chip-dot" style="background:${hasLog?'var(--green)':isRest?'var(--text3)':'var(--accent2)'}"></div>
+      </div>`;
+  }
+
+  renderWeekDayContent();
+}
+
+function selectWeekDay(i) {
+  selectedWeekDay = i;
+  renderWeek();
+}
+
+function changeWeek(delta) {
+  currentWeek = Math.max(1, Math.min(24, currentWeek + delta));
+  renderWeek();
+}
+
+function renderWeekDayContent() {
+  const container = document.getElementById('week-day-content');
+  container.innerHTML = '';
+  const plan = getWeekPlan(currentWeek);
+  const dayPlan = plan[selectedWeekDay];
+  const dayNames = ['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato','Domenica'];
+
+  if (dayPlan.isRest) {
+    container.innerHTML = `
+      <div class="rest-day">
+        <div class="rest-day-icon">😴</div>
+        <div class="rest-day-title">${dayNames[selectedWeekDay].toUpperCase()}</div>
+        <div class="rest-day-sub">Riposo attivo. Camminata, stretching e recupero.</div>
+      </div>`;
+  }
+
+  dayPlan.sessions.forEach(s => {
+    container.innerHTML += `
+      <div class="session-block ${s.type}" style="margin:0 16px 10px">
+        <div class="session-type">${s.label}</div>
+        <div class="session-name">${s.name}</div>
+        <div class="session-details">${s.details}</div>
+        <span class="session-tag ${s.tag}">${s.tag==='tag-am'?'🌅 MATTINA':s.tag==='tag-pm'?'🌙 SERA':'⚡ FLESSIBILE'}</span>
+      </div>`;
+  });
+}
+
+// =================== STATS PAGE ===================
+function renderStats() {
+  const today = new Date();
+  const key = dateKey(today);
+  const log = logData[key] || {};
+
+  const set = (id, val, unit='') => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = val ? `${val}<span class="metric-unit">${unit}</span>` : `—<span class="metric-unit">${unit}</span>`;
+  };
+
+  set('m-recovery', log.recovery, '%');
+  set('m-hrv', log.hrv, 'ms');
+  set('m-sleep', log.sleep, '%');
+  set('m-weight', log.weight, 'kg');
+  set('m-fat', log.fat, '%');
+  set('m-muscle', log.muscle, 'kg');
+
+  if (log.recovery) document.getElementById('bar-recovery').style.width = log.recovery + '%';
+  if (log.hrv) document.getElementById('bar-hrv').style.width = Math.min(100, log.hrv) + '%';
+  if (log.sleep) document.getElementById('bar-sleep').style.width = log.sleep + '%';
+
+  // Charts
+  renderChart('chart-recovery', 'chart-labels', 'recovery', 100, 'fill-green');
+  renderChart('chart-weight', 'chart-weight-labels', 'weight', null, 'fill-blue');
+
+  // Trends
+  renderTrend('t-weight', 'weight');
+  renderTrend('t-fat', 'fat', true);
+  renderTrend('t-muscle', 'muscle');
+}
+
+function getLast7(field) {
+  const result = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const key = dateKey(d);
+    result.push({ day: DAYS_IT[d.getDay()].slice(0,1), val: logData[key] ? parseFloat(logData[key][field]) || 0 : 0 });
+  }
+  return result;
+}
+
+function renderChart(chartId, labelsId, field, maxVal, fillClass) {
+  const data = getLast7(field);
+  const vals = data.map(d => d.val).filter(v => v > 0);
+  const max = maxVal || (vals.length ? Math.max(...vals) * 1.05 : 100);
+  const min = vals.length ? Math.min(...vals) * 0.97 : 0;
+
+  const chart = document.getElementById(chartId);
+  const labels = document.getElementById(labelsId);
+  if (!chart) return;
+
+  chart.innerHTML = '';
+  labels.innerHTML = '';
+
+  data.forEach(d => {
+    const pct = max > 0 && d.val > 0 ? ((d.val - min) / (max - min)) * 80 + 4 : 4;
+    chart.innerHTML += `<div class="chart-bar ${field}" style="height:${pct}px;background:${fillClass==='fill-green'?'var(--green)':fillClass==='fill-blue'?'var(--accent3)':'var(--accent)'};opacity:${d.val>0?1:0.2}" title="${d.val}"></div>`;
+    labels.innerHTML += `<div class="chart-label">${d.day}</div>`;
+  });
+}
+
+function renderTrend(elId, field, lowerIsBetter = false) {
+  const data = getLast7(field);
+  const vals = data.map(d => d.val).filter(v => v > 0);
+  const el = document.getElementById(elId);
+  if (!el || vals.length < 2) return;
+  const diff = (vals[vals.length-1] - vals[vals.length-2]).toFixed(1);
+  const isGood = lowerIsBetter ? diff < 0 : diff > 0;
+  const arrow = diff > 0 ? '↑' : diff < 0 ? '↓' : '→';
+  el.innerHTML = `<span class="${isGood?'trend-up':diff==0?'trend-neutral':'trend-down'}">${arrow} ${Math.abs(diff)} vs ieri</span>`;
+}
+
+// =================== LOG PAGE ===================
+function renderLog() {
+  const today = new Date();
+  document.getElementById('log-date-sub').textContent = formatDate(today);
+  const log = logData[dateKey(today)] || {};
+  const fields = ['recovery','hrv','sleep','sleep-hrs','weight','fat','muscle','water','knee','knee-note','rpe','duration','notes'];
+  fields.forEach(f => {
+    const el = document.getElementById('inp-' + f);
+    if (el && log[f.replace('-','')]) el.value = log[f.replace('-','')];
+  });
+}
+
+function saveLog() {
+  const today = new Date();
+  const key = dateKey(today);
+  const get = id => document.getElementById('inp-' + id)?.value || '';
+
+  logData[key] = {
+    recovery: get('recovery'),
+    hrv: get('hrv'),
+    sleep: get('sleep'),
+    sleephrs: get('sleep-hrs'),
+    weight: get('weight'),
+    fat: get('fat'),
+    muscle: get('muscle'),
+    water: get('water'),
+    knee: get('knee'),
+    kneeNote: get('knee-note'),
+    rpe: get('rpe'),
+    duration: get('duration'),
+    notes: get('notes'),
+    ts: new Date().toISOString()
+  };
+
+  localStorage.setItem('atlas-logs', JSON.stringify(logData));
+  showToast('✓ Check-in salvato!');
+  renderStreak();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// =================== INIT ===================
+function init() {
+  const today = new Date();
+  const weekNum = Math.max(1, getWeekNumber(today));
+  currentWeek = weekNum || 1;
+  selectedWeekDay = getDayOfWeek(today);
+  renderToday();
+}
+
+init();
+
+// =================== SERVICE WORKER ===================
+if ('serviceWorker' in navigator) {
+  const swCode = `
+    const CACHE = 'atlas-v3';
+    self.addEventListener('install', e => { self.skipWaiting(); });
+    self.addEventListener('activate', e => { self.clients.claim(); });
+    self.addEventListener('fetch', e => {
+      e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+    });
+  `;
+  const swBlob = new Blob([swCode], {type:'application/javascript'});
+  const swURL = URL.createObjectURL(swBlob);
+  navigator.serviceWorker.register(swURL, {scope: './'})
+    .then(() => console.log('ATLAS SW ok'))
+    .catch(e => console.log('SW skip:', e));
+}
+
+// =================== iOS INSTALL HINT ===================
+function showIOSInstallHint() {
+  const isIOS = /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
+  const isStandalone = window.navigator.standalone;
+  const shown = localStorage.getItem('atlas-install-hint');
+  if (isIOS && !isStandalone && !shown) {
+    localStorage.setItem('atlas-install-hint', '1');
+    setTimeout(() => {
+      const hint = document.createElement('div');
+      hint.style.cssText = `
+        position:fixed;bottom:90px;left:16px;right:16px;
+        background:#1a1a1a;border:1px solid #e8ff47;border-radius:12px;
+        padding:14px 16px;z-index:200;font-size:13px;color:#f0f0f0;
+        display:flex;align-items:center;gap:12px;
+        box-shadow:0 8px 32px rgba(0,0,0,.6);
+      `;
+      hint.innerHTML = `
+        <span style="font-size:22px">📲</span>
+        <div>
+          <div style="font-weight:600;margin-bottom:3px">Installa ATLAS</div>
+          <div style="color:#888;font-size:12px">Tocca <strong style="color:#e8ff47">Condividi</strong> poi <strong style="color:#e8ff47">Aggiungi a Home</strong></div>
+        </div>
+        <span onclick="this.parentElement.remove()" style="margin-left:auto;color:#888;font-size:20px;cursor:pointer">×</span>
+      `;
+      document.body.appendChild(hint);
+      setTimeout(() => hint.remove(), 8000);
+    }, 2000);
+  }
+}
+showIOSInstallHint();
+</script>
+</body>
+</html>
